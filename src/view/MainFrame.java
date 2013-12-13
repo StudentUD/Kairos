@@ -57,6 +57,7 @@ public class MainFrame extends javax.swing.JFrame {
         newSesButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
+        saveToExcelButton = new javax.swing.JButton();
         edit = new javax.swing.JPanel();
         cleanButton = new javax.swing.JButton();
         randomChoiseButton = new javax.swing.JButton();
@@ -92,7 +93,7 @@ public class MainFrame extends javax.swing.JFrame {
                 {"21:00-22:00", null, null, null, null, null, null, null}
             },
             new String [] {
-                "Hora", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"
+                "Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -109,7 +110,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, datePaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(611, Short.MAX_VALUE))
         );
         datePaneLayout.setVerticalGroup(
             datePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,6 +173,16 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel10))
         );
 
+        saveToExcelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/excelSaving.png"))); // NOI18N
+        saveToExcelButton.setText("Guardar horario");
+        saveToExcelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        saveToExcelButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        saveToExcelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveToExcelButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout fileLayout = new javax.swing.GroupLayout(file);
         file.setLayout(fileLayout);
         fileLayout.setHorizontalGroup(
@@ -184,8 +195,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveSesButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveToExcelButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(exitButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 262, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         fileLayout.setVerticalGroup(
@@ -197,7 +210,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(exitButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(openSesButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(newSesButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveToExcelButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -232,7 +246,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(randomChoiseButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cleanButton)
-                .addContainerGap(734, Short.MAX_VALUE))
+                .addContainerGap(732, Short.MAX_VALUE))
         );
         editLayout.setVerticalGroup(
             editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,7 +313,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(progressBarButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(colorSchedButton)
-                .addContainerGap(436, Short.MAX_VALUE))
+                .addContainerGap(373, Short.MAX_VALUE))
         );
         viewLayout.setVerticalGroup(
             viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -326,7 +340,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(helpLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton5)
-                .addContainerGap(799, Short.MAX_VALUE))
+                .addContainerGap(796, Short.MAX_VALUE))
         );
         helpLayout.setVerticalGroup(
             helpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,10 +355,10 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
             .addComponent(datePane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(tabsPane)
-            .addComponent(jScrollPane1)
+            .addComponent(tabsPane, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -429,6 +443,10 @@ public class MainFrame extends javax.swing.JFrame {
         }
         jTable1.repaint();
     }//GEN-LAST:event_colorSchedButtonActionPerformed
+
+    private void saveToExcelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveToExcelButtonActionPerformed
+        Kairos.saveExcel(this.jTable1);
+    }//GEN-LAST:event_saveToExcelButtonActionPerformed
 
     public void init() {
         if (Kairos.getSesionDate() != null) {
@@ -614,6 +632,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JToggleButton progressBarButton;
     private javax.swing.JButton randomChoiseButton;
     private javax.swing.JButton saveSesButton;
+    private javax.swing.JButton saveToExcelButton;
     private javax.swing.JTabbedPane tabsPane;
     private javax.swing.JPanel view;
     // End of variables declaration//GEN-END:variables

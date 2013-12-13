@@ -14,6 +14,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import jxl.Workbook;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 /**
  *
@@ -23,6 +26,7 @@ public class Kairos {
 
     public static final int MAX_CREDITS = 20;
     private static final FileNameExtensionFilter filter = new FileNameExtensionFilter("Kairos session file (*.KSF)", "KSF");
+    private static final FileNameExtensionFilter filterX = new FileNameExtensionFilter("Libro de excel (*.xls)", "xls");
     private static Date sesionDate = null;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy_HH-mm");
     private static File dataFile = new File("none");
@@ -79,15 +83,15 @@ public class Kairos {
                 String[] salones = null;
                 boolean clsRoom = false;
                 if (infoBloque.length > 1) {
-                    salones = infoBloque[1].split(" ");  ///////////////////probar con loco//////////////////////////                  
+                    salones = infoBloque[1].split(" ");
                     if (salones.length > bloques.length) {
                         int j = 0;
                         String[] t = new String[bloques.length];
-                        for (int k = 0; k < salones.length&& j<t.length; k++) {
+                        for (int k = 0; k < salones.length && j < t.length; k++) {
                             if (salones[k].length() < 2) {
                                 t[j - 1] += " " + salones[k];
                             } else {
-                                t[j++] = salones[k];                                
+                                t[j++] = salones[k];
                             }
                         }
                         salones = t;
@@ -175,6 +179,72 @@ public class Kairos {
             }
         }
 
+    }
+
+    public static void saveExcel(javax.swing.JTable table) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setDialogTitle("Guardar horario");
+        chooser.setSelectedFile(new File("Schedule.xls"));
+        chooser.setFileFilter(filterX);
+        chooser.setAcceptAllFileFilterUsed(false);
+        int result = chooser.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File archivo = chooser.getSelectedFile();
+            try {
+                FileWriter writer = new FileWriter(archivo);
+                writer.close();
+                WritableWorkbook workbook = Workbook.createWorkbook(archivo);
+                workbook.createSheet("schedule", 0);
+                WritableSheet sheet = workbook.getSheet("schedule");
+                writeScheduleTemplate(sheet);
+                for (Asignatura asig : subjects) {
+                    for (Button boton : asig.getButtons()) {
+                        if (boton.isSelected()) {
+                            Group grupo = boton.getGrupo();
+                            for (Block bloque : grupo.getHorario()) {
+                                jxl.write.Label cel;
+                                for (int j = bloque.getHora(); j < bloque.getHoraFin(); j++) {
+                                    cel = new jxl.write.Label(bloque.getDia(), j - 5, bloque.getSalon() + ": " + boton.getMateria().getNombre());
+                                    sheet.addCell(cel);
+                                }                                
+                            }
+                        }
+                    }
+                }
+                workbook.write();
+                workbook.close();
+            } catch (Exception ex) {
+                JFrame frame = new JFrame();
+                JOptionPane.showMessageDialog(frame, "ERROR: Imposible guardar el archivo", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+
+    }
+
+    private static void writeScheduleTemplate(WritableSheet sheet) throws Exception {
+        for (int i = 0; i < 16; i++) {
+            jxl.write.Label cel = new jxl.write.Label(0, i + 1, (6 + i) + ":00-" + (7 + i) + ":00");
+            sheet.addCell(cel);
+        }
+        jxl.write.Label cel = new jxl.write.Label(0, 0, "Hora");
+        sheet.addCell(cel);
+        cel = new jxl.write.Label(0, 0, "Hora");
+        sheet.addCell(cel);
+        cel = new jxl.write.Label(1, 0, "Lunes");
+        sheet.addCell(cel);
+        cel = new jxl.write.Label(2, 0, "Martes");
+        sheet.addCell(cel);
+        cel = new jxl.write.Label(3, 0, "Miércoles");
+        sheet.addCell(cel);
+        cel = new jxl.write.Label(4, 0, "Jueves");
+        sheet.addCell(cel);
+        cel = new jxl.write.Label(5, 0, "Viernes");
+        sheet.addCell(cel);
+        cel = new jxl.write.Label(6, 0, "Sábado");
+        sheet.addCell(cel);
+        cel = new jxl.write.Label(7, 0, "Domingo");
+        sheet.addCell(cel);
     }
 
     public static boolean showConfirmDialog() {
