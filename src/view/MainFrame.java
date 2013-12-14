@@ -67,7 +67,7 @@ public class MainFrame extends javax.swing.JFrame {
         progressBarButton = new javax.swing.JToggleButton();
         colorSchedButton = new javax.swing.JToggleButton();
         help = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
+        aboutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Kairos "+controller.Kairos.VERSION);
@@ -198,7 +198,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(saveToExcelButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(exitButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 262, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         fileLayout.setVerticalGroup(
@@ -246,7 +246,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(randomChoiseButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cleanButton)
-                .addContainerGap(732, Short.MAX_VALUE))
+                .addContainerGap(739, Short.MAX_VALUE))
         );
         editLayout.setVerticalGroup(
             editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,7 +313,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(progressBarButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(colorSchedButton)
-                .addContainerGap(373, Short.MAX_VALUE))
+                .addContainerGap(441, Short.MAX_VALUE))
         );
         viewLayout.setVerticalGroup(
             viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -328,10 +328,15 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabsPane.addTab("Vista", view);
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/info.png"))); // NOI18N
-        jButton5.setText("Acerca de");
-        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        aboutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/info.png"))); // NOI18N
+        aboutButton.setText("Acerca de");
+        aboutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        aboutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        aboutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout helpLayout = new javax.swing.GroupLayout(help);
         help.setLayout(helpLayout);
@@ -339,13 +344,13 @@ public class MainFrame extends javax.swing.JFrame {
             helpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(helpLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton5)
-                .addContainerGap(796, Short.MAX_VALUE))
+                .addComponent(aboutButton)
+                .addContainerGap(804, Short.MAX_VALUE))
         );
         helpLayout.setVerticalGroup(
             helpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, helpLayout.createSequentialGroup()
-                .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(aboutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
         );
 
@@ -448,9 +453,13 @@ public class MainFrame extends javax.swing.JFrame {
         Kairos.saveExcel(this.jTable1);
     }//GEN-LAST:event_saveToExcelButtonActionPerformed
 
+    private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
+        new About(this,true).setVisible(true);
+    }//GEN-LAST:event_aboutButtonActionPerformed
+
     public void init() {
-        if (Kairos.getSesionDate() != null) {
-            this.jLabel1.setText("Grupos actualizados el dia " + sdf.format(Kairos.getSesionDate()));
+        if (Kairos.getSessionDate() != null) {
+            this.jLabel1.setText("Grupos actualizados el dia " + sdf.format(Kairos.getSessionDate()));
         } else {
             this.jLabel1.setText("Grupos actualizados el dia --/--/--  --:--");
         }
@@ -610,6 +619,7 @@ public class MainFrame extends javax.swing.JFrame {
     private boolean filterByPlaces = false;
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy  HH:mm");
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton aboutButton;
     private javax.swing.JPanel buttonsPane;
     private javax.swing.JButton cleanButton;
     private javax.swing.JToggleButton coloByPlacesButton;
@@ -620,7 +630,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton exitButton;
     private javax.swing.JPanel file;
     private javax.swing.JPanel help;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JPanel jPanel5;

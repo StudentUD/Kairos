@@ -42,7 +42,7 @@ public class Kairos {
         Kairos.savedSesion = savedSesion;
     }
 
-    public static Date getSesionDate() {
+    public static Date getSessionDate() {
         return sesionDate;
     }
 
