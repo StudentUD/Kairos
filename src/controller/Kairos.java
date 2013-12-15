@@ -24,7 +24,7 @@ import jxl.write.WritableWorkbook;
  */
 public class Kairos {
 
-    public static final int MAX_CREDITS = 20;
+    public static final int MAX_CREDITS = 30;
     private static final FileNameExtensionFilter filter = new FileNameExtensionFilter("Kairos session file (*.KSF)", "KSF");
     private static final FileNameExtensionFilter filterX = new FileNameExtensionFilter("Libro de excel (*.xls)", "xls");
     private static Date sesionDate = null;
@@ -181,7 +181,7 @@ public class Kairos {
 
     }
 
-    public static void saveExcel(javax.swing.JTable table) {
+    public static void saveExcel() {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(false);
         chooser.setDialogTitle("Guardar horario");
@@ -199,18 +199,18 @@ public class Kairos {
                 WritableSheet sheet = workbook.getSheet("schedule");
                 writeScheduleTemplate(sheet);
                 for (Asignatura asig : subjects) {
-                    for (Button boton : asig.getButtons()) {
-                        if (boton.isSelected()) {
-                            Group grupo = boton.getGrupo();
-                            for (Block bloque : grupo.getHorario()) {
-                                jxl.write.Label cel;
-                                for (int j = bloque.getHora(); j < bloque.getHoraFin(); j++) {
-                                    cel = new jxl.write.Label(bloque.getDia(), j - 5, bloque.getSalon() + ": " + boton.getMateria().getNombre());
-                                    sheet.addCell(cel);
-                                }                                
+                    Button boton = asig.getSelected();
+                    if (boton != null) {
+                        Group grupo = boton.getGrupo();
+                        for (Block bloque : grupo.getHorario()) {
+                            jxl.write.Label cel;
+                            for (int j = bloque.getHora(); j < bloque.getHoraFin(); j++) {
+                                cel = new jxl.write.Label(bloque.getDia(), j - 5, bloque.getSalon() + ": " + boton.getMateria().getNombre());
+                                sheet.addCell(cel);
                             }
                         }
                     }
+
                 }
                 workbook.write();
                 workbook.close();

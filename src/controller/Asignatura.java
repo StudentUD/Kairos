@@ -16,17 +16,17 @@ public class Asignatura {
     private ArrayList<Button> buttons;
     private String name;
     private ArrayList<Group> grupos;
-    private boolean selected;
+    private Button selected;   
     private JLabel label;
         
-    public void setSelected(boolean selected) {
+    public void setSelected(Button selected) {
         this.selected = selected;
-        if(selected){
+        if(selected!=null){
         this.label.setForeground(Color.BLUE);}
         else{this.label.setForeground(null);}
     }
 
-    public boolean isSelected() {
+    public Button getSelected() {
         return selected;
     }
 
