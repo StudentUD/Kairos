@@ -407,7 +407,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="deactivateButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="coloByPlacesButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="colorByPlacesButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="progressBarButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -421,7 +421,7 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="progressBarButton" alignment="0" max="32767" attributes="0"/>
-                          <Component id="coloByPlacesButton" alignment="0" max="32767" attributes="0"/>
+                          <Component id="colorByPlacesButton" alignment="0" max="32767" attributes="0"/>
                           <Component id="deactivateButton" alignment="0" max="32767" attributes="0"/>
                           <Component id="colorSchedButton" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -445,7 +445,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deactivateButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JToggleButton" name="coloByPlacesButton">
+            <Component class="javax.swing.JToggleButton" name="colorByPlacesButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/view/icon/colorFont.png"/>
@@ -455,7 +455,7 @@
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="coloByPlacesButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colorByPlacesButtonActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JToggleButton" name="progressBarButton">

@@ -59,7 +59,7 @@ public class MainFrame extends javax.swing.JFrame {
         randomChoiseButton = new javax.swing.JButton();
         view = new javax.swing.JPanel();
         deactivateButton = new javax.swing.JToggleButton();
-        coloByPlacesButton = new javax.swing.JToggleButton();
+        colorByPlacesButton = new javax.swing.JToggleButton();
         progressBarButton = new javax.swing.JToggleButton();
         colorSchedButton = new javax.swing.JToggleButton();
         help = new javax.swing.JPanel();
@@ -272,13 +272,13 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        coloByPlacesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/colorFont.png"))); // NOI18N
-        coloByPlacesButton.setText("Color por cupos");
-        coloByPlacesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        coloByPlacesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        coloByPlacesButton.addActionListener(new java.awt.event.ActionListener() {
+        colorByPlacesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/colorFont.png"))); // NOI18N
+        colorByPlacesButton.setText("Color por cupos");
+        colorByPlacesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        colorByPlacesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        colorByPlacesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                coloByPlacesButtonActionPerformed(evt);
+                colorByPlacesButtonActionPerformed(evt);
             }
         });
 
@@ -310,7 +310,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(deactivateButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(coloByPlacesButton)
+                .addComponent(colorByPlacesButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progressBarButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -322,7 +322,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(viewLayout.createSequentialGroup()
                 .addGroup(viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(progressBarButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(coloByPlacesButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(colorByPlacesButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(deactivateButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(colorSchedButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
@@ -404,6 +404,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void openSesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSesButtonActionPerformed
         if (Kairos.showConfirmDialog() && Kairos.cargarSesion()) {
             clearTable();
+            deactivateViewFeatures();            
             init();
         }
     }//GEN-LAST:event_openSesButtonActionPerformed
@@ -423,14 +424,14 @@ public class MainFrame extends javax.swing.JFrame {
         actualizarBotones();
     }//GEN-LAST:event_deactivateButtonActionPerformed
 
-    private void coloByPlacesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_coloByPlacesButtonActionPerformed
+    private void colorByPlacesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorByPlacesButtonActionPerformed
         colorByPlaces = !colorByPlaces;
         for (Asignatura mat : Kairos.getSubjects()) {
             for (Button boton : mat.getButtons()) {
                 boton.colorButton(colorByPlaces);
             }
         }
-    }//GEN-LAST:event_coloByPlacesButtonActionPerformed
+    }//GEN-LAST:event_colorByPlacesButtonActionPerformed
 
     private void progressBarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressBarButtonActionPerformed
         progressBar = !progressBar;
@@ -474,11 +475,9 @@ public class MainFrame extends javax.swing.JFrame {
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             panel.add(asig.getLabel());
 
-            for (Group grup : asig.getGrupos()) {
-                Button boton = new Button(grup, asig);
+            for (Button boton : asig.getButtons()) {               
                 panel.add(boton);
                 panel.add(boton.getProgressBar());
-
                 boton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent ae) {
@@ -497,12 +496,19 @@ public class MainFrame extends javax.swing.JFrame {
                         addBloq(bot);
                     }
                 });
-            }
+            }            
             panel.add(Box.createVerticalGlue());
             this.buttonsPane.add(panel);
             this.buttonsPane.add(Box.createHorizontalGlue());
             this.buttonsPane.add(Box.createRigidArea(new Dimension(15, 0)));
             this.buttonsPane.validate();
+        }
+        for (Asignatura asig : Kairos.getSubjects()) {
+            if(asig.getSelected()!=null){
+                Button bot=asig.getSelected();
+                asig.setSelected(null);
+                bot.doClick();
+            }
         }
     }
 
@@ -527,6 +533,13 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
+    private void deactivateViewFeatures(){        
+        if(filterByPlaces)deactivateButton.doClick();
+        if(colorByPlaces)colorByPlacesButton.doClick();
+        if(progressBar)progressBarButton.doClick();
+        if(colorSched)colorSchedButton.doClick();
+    }
+    
     private void clearTable() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{
@@ -591,7 +604,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void selectButton(Button bot) {
         for (Asignatura mat : Kairos.getSubjects()) {
-            if (!mat.equals(bot.getMateria())) {
+            if (mat!=bot.getMateria()) {
                 for (Button boton : mat.getButtons()) {
                     if (bot.getGrupo().isOverlappedWith(boton.getGrupo())) {
                         if (bot.isSelected()) {
@@ -614,7 +627,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton aboutButton;
     private javax.swing.JPanel buttonsPane;
     private javax.swing.JButton cleanButton;
-    private javax.swing.JToggleButton coloByPlacesButton;
+    private javax.swing.JToggleButton colorByPlacesButton;
     private javax.swing.JToggleButton colorSchedButton;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JPanel datePane;

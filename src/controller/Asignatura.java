@@ -64,6 +64,7 @@ public class Asignatura {
         this.buttons = new ArrayList<>();
         this.label= new JLabel("  -->" + name);
         this.codigo= code;
+        this.selected=null;
     }
     
     public Asignatura(String name) {

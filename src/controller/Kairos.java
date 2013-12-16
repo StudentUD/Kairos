@@ -137,8 +137,17 @@ public class Kairos {
                     }
                     sub.add(materia);
                 } else {
-                    Group grupo = parseGroup(dat);
-                    materia.getGrupos().add(grupo);
+                    Group grupo;
+                    Button boton;
+                    if(dat.startsWith("$")){
+                        grupo = parseGroup(dat.substring(1));
+                        boton= new Button(grupo,materia);
+                        materia.setSelected(boton);
+                    }else{
+                        grupo = parseGroup(dat);
+                        boton= new Button(grupo,materia);
+                    }
+                    materia.getGrupos().add(grupo);                    
                 }
             }
         }
@@ -167,8 +176,11 @@ public class Kairos {
                 writer.write(date + System.getProperty("line.separator"));
                 for (Asignatura asig : subjects) {
                     writer.write("*" + asig.getNombre() + "-" + asig.getCodigo() + System.getProperty("line.separator"));
-                    for (Group grupo : asig.getGrupos()) {
-                        writer.write(grupo.getAsText() + System.getProperty("line.separator"));
+                    for (Button but : asig.getButtons()) {
+                        if(but==asig.getSelected()){
+                            writer.write("$");
+                        }
+                        writer.write(but.getGrupo().getAsText() + System.getProperty("line.separator"));
                     }
                 }
                 writer.close();

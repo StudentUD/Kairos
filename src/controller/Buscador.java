@@ -129,7 +129,9 @@ public class Buscador {
             ///////////////            
             String group= new String(str);                   
             try {
-                asig.getGrupos().add(Kairos.parseGroup(group));
+                Group grup= Kairos.parseGroup(group);
+                asig.getGrupos().add(grup);
+                new Button(grup,asig);
             } catch (Exception ex) {
                 System.out.println("Group parse error");
             }
