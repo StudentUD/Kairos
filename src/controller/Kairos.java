@@ -132,8 +132,9 @@ public class Kairos {
                     String[] asig = dat.substring(1).split("-");
                     if (asig.length > 1) {
                         materia = new Asignatura(asig[0], asig[1]);
-                    } else {
-                        materia = new Asignatura(asig[0]);
+                    }
+                    if(asig.length>2){
+                        materia.setCreditos(Integer.valueOf(asig[2]));
                     }
                     sub.add(materia);
                 } else {
@@ -175,7 +176,7 @@ public class Kairos {
                 FileWriter writer = new FileWriter(archivo);
                 writer.write(date + System.getProperty("line.separator"));
                 for (Asignatura asig : subjects) {
-                    writer.write("*" + asig.getNombre() + "-" + asig.getCodigo() + System.getProperty("line.separator"));
+                    writer.write("*" + asig.getNombre() + "-" + asig.getCodigo()+"-"+asig.getCreditos()+ System.getProperty("line.separator"));
                     for (Button but : asig.getButtons()) {
                         if(but==asig.getSelected()){
                             writer.write("$");

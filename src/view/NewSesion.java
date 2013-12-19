@@ -20,6 +20,15 @@ public class NewSesion extends javax.swing.JFrame {
      */
     public NewSesion() {
         initComponents();
+        if(Kairos.getSubjects()!=null&&!Kairos.getSubjects().isEmpty());{
+            for(Asignatura asig: Kairos.getSubjects()){
+                Asignatura a= new Asignatura(asig.getNombre(),asig.getCodigo());
+                a.setCreditos(asig.getCreditos());
+                asignaturasToAdd.add(a);
+                }
+            refreshToAddList();
+        }
+        
         jProgressBar1.setVisible(false);
         this.setLocationRelativeTo(null);
     }
