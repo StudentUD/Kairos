@@ -14,7 +14,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import jxl.CellView;
 import jxl.Workbook;
+import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
@@ -31,7 +33,7 @@ public class Kairos {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy_HH-mm");
     private static File dataFile = new File("none");
     private static boolean savedSesion = false;
-    public static final String VERSION = "2.0";
+    public static final String VERSION = "1.0";
     private static LinkedHashSet<Asignatura> subjects = new LinkedHashSet<>();
 
     public static boolean isSavedSesion() {
@@ -87,7 +89,7 @@ public class Kairos {
                     if (salones.length > bloques.length) {
                         int j = 0;
                         String[] t = new String[bloques.length];
-                        for (int k = 0; k < salones.length && j < t.length; k++) {
+                        for (int k = 0; k < salones.length && j <= t.length; k++) {
                             if (salones[k].length() < 2) {
                                 t[j - 1] += " " + salones[k];
                             } else {
@@ -133,22 +135,22 @@ public class Kairos {
                     if (asig.length > 1) {
                         materia = new Asignatura(asig[0], asig[1]);
                     }
-                    if(asig.length>2){
+                    if (asig.length > 2) {
                         materia.setCreditos(Integer.valueOf(asig[2]));
                     }
                     sub.add(materia);
                 } else {
                     Group grupo;
                     Button boton;
-                    if(dat.startsWith("$")){
+                    if (dat.startsWith("$")) {
                         grupo = parseGroup(dat.substring(1));
-                        boton= new Button(grupo,materia);
+                        boton = new Button(grupo, materia);
                         materia.setSelected(boton);
-                    }else{
+                    } else {
                         grupo = parseGroup(dat);
-                        boton= new Button(grupo,materia);
+                        boton = new Button(grupo, materia);
                     }
-                    materia.getGrupos().add(grupo);                    
+                    materia.getGrupos().add(grupo);
                 }
             }
         }
@@ -176,9 +178,9 @@ public class Kairos {
                 FileWriter writer = new FileWriter(archivo);
                 writer.write(date + System.getProperty("line.separator"));
                 for (Asignatura asig : subjects) {
-                    writer.write("*" + asig.getNombre() + "-" + asig.getCodigo()+"-"+asig.getCreditos()+ System.getProperty("line.separator"));
+                    writer.write("*" + asig.getNombre() + "-" + asig.getCodigo() + "-" + asig.getCreditos() + System.getProperty("line.separator"));
                     for (Button but : asig.getButtons()) {
-                        if(but==asig.getSelected()){
+                        if (but == asig.getSelected()) {
                             writer.write("$");
                         }
                         writer.write(but.getGrupo().getAsText() + System.getProperty("line.separator"));
@@ -211,6 +213,8 @@ public class Kairos {
                 workbook.createSheet("schedule", 0);
                 WritableSheet sheet = workbook.getSheet("schedule");
                 writeScheduleTemplate(sheet);
+                WritableCellFormat cellFormat = new WritableCellFormat();
+                cellFormat.setWrap(true);
                 for (Asignatura asig : subjects) {
                     Button boton = asig.getSelected();
                     if (boton != null) {
@@ -218,12 +222,20 @@ public class Kairos {
                         for (Block bloque : grupo.getHorario()) {
                             jxl.write.Label cel;
                             for (int j = bloque.getHora(); j < bloque.getHoraFin(); j++) {
-                                cel = new jxl.write.Label(bloque.getDia(), j - 5, bloque.getSalon() + ": " + boton.getMateria().getNombre());
+                                cel = new jxl.write.Label(bloque.getDia(), j - 5, bloque.getSalon() + ": " + boton.getMateria().getNombre(), cellFormat);
                                 sheet.addCell(cel);
                             }
                         }
                     }
 
+                }
+                CellView cell = sheet.getColumnView(0);
+                cell.setSize(2700);
+                sheet.setColumnView(0, cell);
+                for (int x = 1; x < 8; x++) {
+                    cell = sheet.getColumnView(x);
+                    cell.setSize(7500);
+                    sheet.setColumnView(x, cell);
                 }
                 workbook.write();
                 workbook.close();
