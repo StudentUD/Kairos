@@ -18,6 +18,7 @@ public class Asignatura {
     private ArrayList<Group> grupos;
     private Button selected;   
     private JLabel label;
+    private Plan plan;
         
     public void setSelected(Button selected) {
         this.selected = selected;
@@ -49,6 +50,14 @@ public class Asignatura {
     public int getCreditos() {
         return creditos;
     }
+    
+    public Plan getPlan(){
+        return this.plan;
+    }
+    
+    public void setPlan(Plan p){
+        this.plan=p;
+    }
 
     public void setCreditos(int creditos) {
         this.creditos = creditos;
@@ -75,7 +84,7 @@ public class Asignatura {
     public boolean equals(Object o){
         if(o instanceof Asignatura){
             Asignatura a= (Asignatura)o;
-            if(a.getNombre().equals(this.name)){
+            if(a.getCodigo().equals(this.codigo)){
                 return true;
             }
         }

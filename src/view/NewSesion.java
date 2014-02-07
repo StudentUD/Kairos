@@ -546,10 +546,11 @@ public class NewSesion extends javax.swing.JFrame {
                     try {
                         for (Asignatura asig : asignaturasToAdd) {
                             jLabel6.setText("Cargando \"" + asig.getNombre() + "\"...");
+                            buscador.setPlanFilter(asig.getPlan());
                             Kairos.getSubjects().add(buscador.asignaturaCompleta(asig));
                         }
                         Kairos.setSesionDate(new GregorianCalendar().getTime());
-                        Kairos.setSavedSesion(false);                        
+                        Kairos.setSavedSesion(false);
                         invokeMainFrame();
                     } catch (IOException ex) {
                         JFrame frame = new JFrame();
@@ -609,9 +610,9 @@ public class NewSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void preButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preButtonActionPerformed
-        if(posButton.isSelected()){
+        if (posButton.isSelected()) {
             posButton.setSelected(false);
-        }        
+        }
         refreshPlansList();
 
     }//GEN-LAST:event_preButtonActionPerformed
@@ -620,12 +621,8 @@ public class NewSesion extends javax.swing.JFrame {
         try {
             if (planComboBox.getSelectedIndex() == 0) {
                 buscador.removePlanFilter();
-            } else {
-                int s = Buscador.PRE;
-                if (posButton.isSelected()) {
-                    s = Buscador.POS;
-                }
-                buscador.addPlanFilter((Plan) planComboBox.getSelectedItem(), s);
+            } else {                
+                buscador.setPlanFilter((Plan) planComboBox.getSelectedItem());
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "No se ha podido establecer conexión con el servidor.\nCargue una sesion manualmente o vuelva a intentarlo mas tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
@@ -633,9 +630,9 @@ public class NewSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_planComboBoxActionPerformed
 
     private void posButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_posButtonActionPerformed
-        if(preButton.isSelected()){
+        if (preButton.isSelected()) {
             preButton.setSelected(false);
-        }        
+        }
         refreshPlansList();
 
     }//GEN-LAST:event_posButtonActionPerformed
@@ -644,10 +641,10 @@ public class NewSesion extends javax.swing.JFrame {
         try {
             if (preButton.isSelected()) {
                 planComboBox.setModel(new javax.swing.DefaultComboBoxModel(buscador.getPlansPreg().toArray()));
-            } else if(posButton.isSelected()){
+            } else if (posButton.isSelected()) {
                 planComboBox.setModel(new javax.swing.DefaultComboBoxModel(buscador.getPlansPos().toArray()));
-            }else{
-                String[] s= {"--Seleccione un nivel académico--"};            
+            } else {
+                String[] s = {"--Seleccione un nivel académico--"};
                 planComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(s));
                 buscador.removePlanFilter();
             }
@@ -667,6 +664,11 @@ public class NewSesion extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Máximo de " + Kairos.MAX_CREDITS + " créditos alcanzados", "Creditos máximos", JOptionPane.WARNING_MESSAGE);
                 return;
             }
+        }
+        if (preButton.isSelected() || posButton.isSelected()) {
+            toAdd.setPlan((Plan) planComboBox.getSelectedItem());
+        }else{
+            toAdd.setPlan(Plan.NULL_PLAN);
         }
         asignaturasToAdd.add(toAdd);
     }
@@ -710,6 +712,7 @@ public class NewSesion extends javax.swing.JFrame {
         buscador.terminate();
         this.dispose();
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             @Override
             public void run() {
                 MainFrame fr = new MainFrame();
@@ -746,7 +749,6 @@ public class NewSesion extends javax.swing.JFrame {
         }
         return icn;
     }
-    
     private String searchParameter;
     private Buscador buscador;
     private ArrayList<Asignatura> asignaturas;

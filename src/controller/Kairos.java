@@ -177,6 +177,9 @@ public class Kairos {
                     if (asig.length > 2) {
                         materia.setCreditos(Integer.valueOf(asig[2]));
                     }
+                    if (asig.length==5){
+                        materia.setPlan(new Plan(asig[3],"",Integer.valueOf(asig[4])));
+                    }
                     subjects.add(materia);
                 } else {
                     Group grupo;
@@ -216,7 +219,7 @@ public class Kairos {
                 FileWriter writer = new FileWriter(archivo);
                 writer.write(date + System.getProperty("line.separator"));
                 for (Asignatura asig : subjects) {
-                    writer.write("*" + asig.getNombre() + "-" + asig.getCodigo() + "-" + asig.getCreditos() + System.getProperty("line.separator"));
+                    writer.write("*" + asig.getNombre() + "-" + asig.getCodigo() + "-" + asig.getCreditos()+"-"+asig.getPlan().getCode()+"-"+asig.getPlan().getLevel() + System.getProperty("line.separator"));
                     for (Button but : asig.getButtons()) {
                         if (but == asig.getSelected()) {
                             writer.write("$");

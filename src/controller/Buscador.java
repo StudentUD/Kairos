@@ -22,9 +22,7 @@ public class Buscador {
     public static final String MAN= "http://sia.manizales.unal.edu.co/buscador/service/action.pub";
     public static final String MED= "http://sia1.medellin.unal.edu.co:9401/buscador/service/action.pub";
     public static final String ORI= "http://orinoquia.sia.unal.edu.co/buscador/service/action.pub";
-    public static final String PLM ="http://www.sia.palmira.unal.edu.co/buscador/service/action.pub";                                     
-    public static final int PRE = 1;
-    public static final int POS = 2;
+    public static final String PLM ="http://www.sia.palmira.unal.edu.co/buscador/service/action.pub";
     private static final int waitForJavaScriptTime = 5000;
     private HtmlPage currentPage;
     private static String buscadorURL;
@@ -34,12 +32,14 @@ public class Buscador {
     private boolean nameCriteria;
     private static ArrayList<Plan> planesPre;
     private static ArrayList<Plan> planesPos;
+    private Plan activePlanFilter;
 
      public Buscador() throws IOException {
         planesPre = null;
         planesPos = null;
         nameCriteria = false;
         planCriteria = false;
+        activePlanFilter=Plan.NULL_PLAN;
         webClient = new WebClient(BrowserVersion.FIREFOX_10);
         webClient.getOptions().setJavaScriptEnabled(true);
         webClient.getCookieManager().setCookiesEnabled(true);
@@ -115,21 +115,20 @@ public class Buscador {
         pos = leftBlock.getElementById("valor_criterio_planestudio_POS").getElementsByTagName("option");
 
         planesPre = new ArrayList<>();
-        planesPos = new ArrayList<>();
-        Plan none = new Plan("0000", "Ninguno");
-        planesPre.add(none);
-        planesPos.add(none);
+        planesPos = new ArrayList<>();        
+        planesPre.add(Plan.NULL_PLAN);
+        planesPos.add(Plan.NULL_PLAN);
         for (int i = 1; i < pre.size(); i++) {
             String dat = pre.get(i).getTextContent();
             String code = dat.substring(1, 5);
-            String name = dat.substring(7);
-            planesPre.add(new Plan(code, name));
+            String name = dat.substring(7);            
+            planesPre.add(new Plan(code, name, Plan.PRE));
         }
         for (int i = 1; i < pos.size(); i++) {
             String dat = pos.get(i).getTextContent();
             String code = dat.substring(1, 5);
             String name = dat.substring(7);
-            planesPos.add(new Plan(code, name));
+            planesPos.add(new Plan(code, name, Plan.POS));
         }
     }   
 
@@ -147,7 +146,7 @@ public class Buscador {
         if (currentPage == null) {
             currentPage = webClient.getPage(buscadorURL);
         }
-        if (!nameCriteria) {
+        if (!nameCriteria) {            
             HtmlElement subjectSearchBlock = getLeftSearchBlock(currentPage).getElementById("bloque_buscador_asignatura").getElementById("bloque_crear_criterio_asignatura");
             asigTextField = subjectSearchBlock.getElementById("valor_criterio_asignatura");
             searchButton = subjectSearchBlock.getOneHtmlElementByAttribute("a", "class", "btn");
@@ -252,7 +251,15 @@ public class Buscador {
         return asig;
     }
 
-    public void addPlanFilter(Plan plan, int lvlCriteria) throws IOException {
+    public void setPlanFilter(Plan plan)throws IOException {        
+        if(plan==activePlanFilter){
+            return;
+        }
+        if(plan==Plan.NULL_PLAN){
+            removePlanFilter();
+            return;
+        }
+        
         HtmlElement window;
         HtmlElement lvlBtn;
         HtmlElement comboBox;
@@ -261,24 +268,21 @@ public class Buscador {
             currentPage = webClient.getPage(buscadorURL);
         }
         if (planCriteria) {
-            HtmlElement editPlanCritBlock = getLeftSearchBlock(currentPage).getElementById("bloque_criterios_aplicados").getElementById("bloque_criterios_aplicados_visible").getElementById("criterios_aplicados_plan");
-            editPlanCritBlock.getOneHtmlElementByAttribute("a", "class", "btn_edit").click();
-            window = editPlanCritBlock.getElementById("contenedor_ventana_edicion_plan").getOneHtmlElementByAttribute("div", "class", "item");
-
-        } else {
+            removePlanFilter();
+        }
+        
             HtmlElement leftBlock = getLeftSearchBlock(currentPage);
             leftBlock.getElementsByAttribute("div", "class", "section").get(1).getOneHtmlElementByAttribute("div", "class", "module").getElementById("btn_criterio_plan").click();
             window = leftBlock.getElementById("contenedor_ventana_base_plan").getOneHtmlElementByAttribute("div", "class", "item");
-        }
+        
+        switch (plan.getLevel()) {
 
-        switch (lvlCriteria) {
-
-            case PRE: {
+            case Plan.PRE: {
                 lvlBtn = window.getOneHtmlElementByAttribute("input", "value", "PRE");
                 comboBox = window.getElementById("valor_criterio_planestudio_PRE");
                 break;
             }
-            case POS: {
+            case Plan.POS: {
                 lvlBtn = window.getOneHtmlElementByAttribute("input", "value", "POS");
                 comboBox = window.getElementById("valor_criterio_planestudio_POS");
                 break;
@@ -298,6 +302,7 @@ public class Buscador {
         searchBtn.click();
 
         planCriteria = true;
+        activePlanFilter=plan;
     }
 
     public void removePlanFilter() throws IOException {
@@ -305,6 +310,7 @@ public class Buscador {
             HtmlElement editPlanCritBlock = getLeftSearchBlock(currentPage).getElementById("bloque_criterios_aplicados").getElementById("bloque_criterios_aplicados_visible").getElementById("criterios_aplicados_plan");
             editPlanCritBlock.getOneHtmlElementByAttribute("a", "class", "btn_delete").click();
             planCriteria = false;
+            activePlanFilter=Plan.NULL_PLAN;
         }
     }
 }
