@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.LinkedHashSet;
 import javax.swing.JRadioButton;
 import view.JProgressBarColored;
 
@@ -14,8 +15,13 @@ public class Button extends JRadioButton {
     private Group grupo;
     private Asignatura materia;    
     private int conflictive;
+    private LinkedHashSet<Button> overlapped;
     private Color color;
     private JProgressBarColored progressBar;
+    
+    public LinkedHashSet<Button> getOverlapped(){
+        return this.overlapped;
+    }
     
     public void addConflictive(){
         conflictive++;
@@ -43,7 +49,7 @@ public class Button extends JRadioButton {
     }
 
     public Button(Group grupo, Asignatura materia) {
-        super(grupo.toString());
+        super(grupo.toString());        
         this.conflictive=0;
         this.grupo = grupo;
         this.materia = materia;        
@@ -64,8 +70,26 @@ public class Button extends JRadioButton {
         progressBar.setVisible(false);
         this.setToolTipText("Cupos disp: "+grupo.getCupos()+"/"+grupo.getCuposTotales());
         materia.getButtons().add(this);
+        initOverlapped();
     }
 
+    private void initOverlapped(){
+        this.overlapped= new LinkedHashSet<>();
+        for (Asignatura mat : Kairos.getSubjects()) {            
+            if (mat!=this.materia) {
+                
+                for (Button boton : mat.getButtons()) {
+                    
+                    if (grupo.isOverlappedWith(boton.getGrupo())) {
+                        this.getOverlapped().add(boton);
+                        boton.getOverlapped().add(this);
+                        
+                    }                    
+                }
+            }
+        }        
+    }
+    
     public void colorButton(boolean bool) {
         if (bool) {
             this.setForeground(color);

@@ -33,8 +33,47 @@ public class Kairos {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy_HH-mm");
     private static File dataFile = new File("none");
     private static boolean savedSesion = false;
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "1.0 beta";
     private static LinkedHashSet<Asignatura> subjects = new LinkedHashSet<>();
+    private static String[] sedes={"AMAZONIA","BOGOTA","CARIBE","MANIZALES","MEDELLIN","ORINOQUIA","PALMIRA"};
+    private static int selectedSede=1;
+    
+    public static String returnFunnyMSG(int credits) {
+        if (credits < 10) {
+            return "¿Menos de 10 créditos?\nSupongo que piensas tener mucho tiempo libre.";
+        } else if (credits >= 20 && credits < 25) {
+            return "¡Más de 20 créditos!\n¿Quien te crees que eres? ¿Superman?";
+        } else if (credits >= 25) {
+            return "Piensa en aquellos que te quieren.\n¡No cometas un suicidio académico!";
+        }
+        return null;
+    }
+
+    public static void setSede(int i){
+        selectedSede=i;
+    }
+    
+    public static int getSede() {
+        return selectedSede;
+    }
+
+    public static void writeSEDEfile(int selectedSede) {
+        String line = System.getProperty("line.separator");
+        FileWriter bw;
+        try {
+            StringBuffer sb= new StringBuffer();
+            for(int i=0; i<7;i++){
+                if(i==selectedSede){
+                    sb.append("*");
+                }
+                sb.append(sedes[i]).append(line);
+            }            
+            bw = new FileWriter(new File("./SEDE.cfg"));
+            bw.write(sb.toString());
+            bw.close();
+        } catch (IOException ex) {
+        }
+    }
 
     public static boolean isSavedSesion() {
         return savedSesion;
@@ -60,7 +99,7 @@ public class Kairos {
         return subjects;
     }
 
-    private static ArrayList<String> getData(File file) throws Exception {
+    public static ArrayList<String> getData(File file) throws Exception {
         ArrayList<String> data = new ArrayList<>();
         FileReader fileReader = new FileReader(file);
         BufferedReader reader = new BufferedReader(fileReader);
@@ -92,7 +131,7 @@ public class Kairos {
                         for (int k = 0; k < salones.length && j <= t.length; k++) {
                             if (salones[k].length() < 2) {
                                 t[j - 1] += " " + salones[k];
-                            } else {
+                            } else if (j < t.length) {
                                 t[j++] = salones[k];
                             }
                         }
@@ -116,7 +155,7 @@ public class Kairos {
     }
 
     private static void actualizarEstado() throws Exception {
-        LinkedHashSet<Asignatura> sub = new LinkedHashSet<>();
+        subjects = new LinkedHashSet<>();
         ArrayList<String> datos = getData(dataFile);
         Asignatura materia = null;
 
@@ -138,7 +177,7 @@ public class Kairos {
                     if (asig.length > 2) {
                         materia.setCreditos(Integer.valueOf(asig[2]));
                     }
-                    sub.add(materia);
+                    subjects.add(materia);
                 } else {
                     Group grupo;
                     Button boton;
@@ -154,7 +193,6 @@ public class Kairos {
                 }
             }
         }
-        subjects = sub;
     }
 
     public static void guardarSesion() {

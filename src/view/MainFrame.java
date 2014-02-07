@@ -25,6 +25,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() {
         initComponents();
+        jTable1.setDefaultRenderer(Object.class, new CustomCellRenderer());
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
                 if (Kairos.showConfirmDialog()) {
@@ -97,13 +98,40 @@ public class MainFrame extends javax.swing.JFrame {
             new String [] {
                 "Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
+        jTable1.getColumnModel().getColumn(0).setMinWidth(60);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
+        jTable1.getColumnModel().getColumn(0).setMaxWidth(100);
+        jTable1.getColumnModel().getColumn(0).setHeaderValue("Hora");
+        jTable1.getColumnModel().getColumn(1).setMinWidth(60);
+        jTable1.getColumnModel().getColumn(1).setHeaderValue("Lunes");
+        jTable1.getColumnModel().getColumn(2).setMinWidth(60);
+        jTable1.getColumnModel().getColumn(2).setHeaderValue("Martes");
+        jTable1.getColumnModel().getColumn(3).setMinWidth(60);
+        jTable1.getColumnModel().getColumn(3).setHeaderValue("Miércoles");
+        jTable1.getColumnModel().getColumn(4).setMinWidth(60);
+        jTable1.getColumnModel().getColumn(4).setHeaderValue("Jueves");
+        jTable1.getColumnModel().getColumn(5).setMinWidth(60);
+        jTable1.getColumnModel().getColumn(5).setHeaderValue("Viernes");
+        jTable1.getColumnModel().getColumn(6).setMinWidth(60);
+        jTable1.getColumnModel().getColumn(6).setHeaderValue("Sábado");
+        jTable1.getColumnModel().getColumn(7).setMinWidth(60);
+        jTable1.getColumnModel().getColumn(7).setHeaderValue("Domingo");
 
         buttonsPane.setLayout(new javax.swing.BoxLayout(buttonsPane, javax.swing.BoxLayout.X_AXIS));
         jScrollPane2.setViewportView(buttonsPane);
 
-        jLabel1.setText("Grupos actualizados el dia");
+        jLabel1.setText("(Número del grupo - Nombre del docente)                 Grupos actualizados el dia");
 
         dateLabel.setText("--/--/--  --:--");
 
@@ -127,7 +155,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         openSesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/open alt.png"))); // NOI18N
         openSesButton.setText("Abrir");
-        openSesButton.setToolTipText("");
+        openSesButton.setToolTipText("Abre una sesión anterior");
         openSesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         openSesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         openSesButton.addActionListener(new java.awt.event.ActionListener() {
@@ -138,6 +166,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         saveSesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/Save.png"))); // NOI18N
         saveSesButton.setText("Guardar");
+        saveSesButton.setToolTipText("Guarda tu sesión");
         saveSesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         saveSesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         saveSesButton.addActionListener(new java.awt.event.ActionListener() {
@@ -158,6 +187,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         newSesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/new doc.png"))); // NOI18N
         newSesButton.setText("Nuevo");
+        newSesButton.setToolTipText("Inicia una nueva sesión");
         newSesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         newSesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         newSesButton.addActionListener(new java.awt.event.ActionListener() {
@@ -183,6 +213,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         saveToExcelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/excelSaving.png"))); // NOI18N
         saveToExcelButton.setText("Guardar horario");
+        saveToExcelButton.setToolTipText("Guarda tu horario en Excel");
         saveToExcelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         saveToExcelButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         saveToExcelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -206,7 +237,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(saveToExcelButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(exitButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 330, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         fileLayout.setVerticalGroup(
@@ -269,7 +300,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(randomChoiseButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cleanButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 489, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 583, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         editLayout.setVerticalGroup(
@@ -318,6 +349,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         colorSchedButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/color.png"))); // NOI18N
+        colorSchedButton.setSelected(true);
         colorSchedButton.setText("Horario a color");
         colorSchedButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         colorSchedButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -355,7 +387,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(progressBarButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(colorSchedButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 285, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         viewLayout.setVerticalGroup(
@@ -406,7 +438,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(helpLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(aboutButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 554, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 648, Short.MAX_VALUE)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         helpLayout.setVerticalGroup(
@@ -601,32 +633,15 @@ public class MainFrame extends javax.swing.JFrame {
         if(filterByPlaces)deactivateButton.doClick();
         if(colorByPlaces)colorByPlacesButton.doClick();
         if(progressBar)progressBarButton.doClick();
-        if(colorSched)colorSchedButton.doClick();
+        if(!colorSched)colorSchedButton.doClick();
     }
     
     private void clearTable() {
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-            {"6:00-7:00", null, null, null, null, null, null, null},
-            {"7:00-8:00", null, null, null, null, null, null, null},
-            {"8:00-9:00", null, null, null, null, null, null, null},
-            {"9:00-10:00", null, null, null, null, null, null, null},
-            {"10:00-11:00", null, null, null, null, null, null, null},
-            {"11:00-12:00", null, null, null, null, null, null, null},
-            {"12:00-13:00", null, null, null, null, null, null, null},
-            {"13:00-14:00", null, null, null, null, null, null, null},
-            {"14:00-15:00", null, null, null, null, null, null, null},
-            {"15:00-16:00", null, null, null, null, null, null, null},
-            {"16:00-17:00", null, null, null, null, null, null, null},
-            {"17:00-18:00", null, null, null, null, null, null, null},
-            {"18:00-19:00", null, null, null, null, null, null, null},
-            {"19:00-20:00", null, null, null, null, null, null, null},
-            {"20:00-21:00", null, null, null, null, null, null, null},
-            {"21:00-22:00", null, null, null, null, null, null, null}
-        },
-                new String[]{
-            "Hora", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"
-        }));
+        for(int i=1; i<8; i++){
+            for(int j=0; j<16;j++){
+            jTable1.setValueAt(null, j, i);
+            }
+        }        
     }
 
     private void randomChoise() {
@@ -667,22 +682,16 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void selectButton(Button bot) {
-        for (Asignatura mat : Kairos.getSubjects()) {
-            if (mat!=bot.getMateria()) {
-                for (Button boton : mat.getButtons()) {
-                    if (bot.getGrupo().isOverlappedWith(boton.getGrupo())) {
-                        if (bot.isSelected()) {
-                            boton.addConflictive();
-                        } else {
-                            boton.removeConflictive();
-                        }
-                    }
-                    onOffButton(boton);
-                }
+        for(Button b: bot.getOverlapped()){
+            if(bot.isSelected()){
+                b.addConflictive();
+            }else{
+                b.removeConflictive();
             }
-        }
+            onOffButton(b);
+        }        
     }
-    private boolean colorSched = false;
+    private boolean colorSched = true;
     private boolean colorByPlaces = false;
     private boolean progressBar = false;
     private boolean filterByPlaces = false;

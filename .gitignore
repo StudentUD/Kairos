@@ -9,3 +9,5 @@
 *.java~
 Thumbs.db
 
+/build/
+/dist/

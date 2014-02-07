@@ -58,7 +58,7 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="8" rowCount="16">
-                <Column editable="true" title="Hora" type="java.lang.Object">
+                <Column editable="false" title="Hora" type="java.lang.Object">
                   <Data value="6:00-7:00"/>
                   <Data value="7:00-8:00"/>
                   <Data value="8:00-9:00"/>
@@ -76,61 +76,61 @@
                   <Data value="20:00-21:00"/>
                   <Data value="21:00-22:00"/>
                 </Column>
-                <Column editable="true" title="Lunes" type="java.lang.Object"/>
-                <Column editable="true" title="Martes" type="java.lang.Object"/>
-                <Column editable="true" title="Mi&#xe9;rcoles" type="java.lang.Object"/>
-                <Column editable="true" title="Jueves" type="java.lang.Object"/>
-                <Column editable="true" title="Viernes" type="java.lang.Object"/>
-                <Column editable="true" title="S&#xe1;bado" type="java.lang.Object"/>
-                <Column editable="true" title="Domingo" type="java.lang.Object"/>
+                <Column editable="false" title="Lunes" type="java.lang.Object"/>
+                <Column editable="false" title="Martes" type="java.lang.Object"/>
+                <Column editable="false" title="Mi&#xe9;rcoles" type="java.lang.Object"/>
+                <Column editable="false" title="Jueves" type="java.lang.Object"/>
+                <Column editable="false" title="Viernes" type="java.lang.Object"/>
+                <Column editable="false" title="S&#xe1;bado" type="java.lang.Object"/>
+                <Column editable="false" title="Domingo" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
+                <Column maxWidth="100" minWidth="60" prefWidth="100" resizable="true">
+                  <Title value="Hora"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
+                <Column maxWidth="-1" minWidth="60" prefWidth="-1" resizable="true">
+                  <Title value="Lunes"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
+                <Column maxWidth="-1" minWidth="60" prefWidth="-1" resizable="true">
+                  <Title value="Martes"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
+                <Column maxWidth="-1" minWidth="60" prefWidth="-1" resizable="true">
+                  <Title value="Mi&#xe9;rcoles"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
+                <Column maxWidth="-1" minWidth="60" prefWidth="-1" resizable="true">
+                  <Title value="Jueves"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
+                <Column maxWidth="-1" minWidth="60" prefWidth="-1" resizable="true">
+                  <Title value="Viernes"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
+                <Column maxWidth="-1" minWidth="60" prefWidth="-1" resizable="true">
+                  <Title value="S&#xe1;bado"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
+                <Column maxWidth="-1" minWidth="60" prefWidth="-1" resizable="true">
+                  <Title value="Domingo"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
               </TableColumnModel>
             </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+              <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
             </Property>
           </Properties>
         </Component>
@@ -174,7 +174,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Grupos actualizados el dia"/>
+            <Property name="text" type="java.lang.String" value="(N&#xfa;mero del grupo - Nombre del docente)                 Grupos actualizados el dia"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="dateLabel">
@@ -211,7 +211,7 @@
                       <Component id="saveToExcelButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="exitButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="236" max="32767" attributes="0"/>
+                      <EmptySpace pref="330" max="32767" attributes="0"/>
                       <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -241,7 +241,7 @@
                   <Image iconType="3" name="/view/icon/open alt.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Abrir"/>
-                <Property name="toolTipText" type="java.lang.String" value=""/>
+                <Property name="toolTipText" type="java.lang.String" value="Abre una sesi&#xf3;n anterior"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
@@ -255,6 +255,7 @@
                   <Image iconType="3" name="/view/icon/Save.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Guardar"/>
+                <Property name="toolTipText" type="java.lang.String" value="Guarda tu sesi&#xf3;n"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
@@ -281,6 +282,7 @@
                   <Image iconType="3" name="/view/icon/new doc.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nuevo"/>
+                <Property name="toolTipText" type="java.lang.String" value="Inicia una nueva sesi&#xf3;n"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
@@ -321,6 +323,7 @@
                   <Image iconType="3" name="/view/icon/excelSaving.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Guardar horario"/>
+                <Property name="toolTipText" type="java.lang.String" value="Guarda tu horario en Excel"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
@@ -347,7 +350,7 @@
                       <Component id="randomChoiseButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cleanButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="489" max="32767" attributes="0"/>
+                      <EmptySpace pref="583" max="32767" attributes="0"/>
                       <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -445,7 +448,7 @@
                       <Component id="progressBarButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="colorSchedButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="191" max="32767" attributes="0"/>
+                      <EmptySpace pref="285" max="32767" attributes="0"/>
                       <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -514,6 +517,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/view/icon/color.png"/>
                 </Property>
+                <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Horario a color"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
@@ -566,7 +570,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="aboutButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="554" max="32767" attributes="0"/>
+                      <EmptySpace pref="648" max="32767" attributes="0"/>
                       <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
