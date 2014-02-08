@@ -178,7 +178,7 @@ public class Kairos {
                         materia.setCreditos(Integer.valueOf(asig[2]));
                     }
                     if (asig.length==5){
-                        materia.setPlan(new Plan(asig[3],"",Integer.valueOf(asig[4])));
+                        materia.setPlan(new Plan(asig[3],"",asig[4]));
                     }
                     subjects.add(materia);
                 } else {

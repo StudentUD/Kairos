@@ -7,25 +7,25 @@ package controller;
 public class Plan {
     private String code;
     private String name;
-    public static final int PRE = 1;
-    public static final int POS = 2;
-    private int level;
-    public static final Plan NULL_PLAN= new Plan("0000", "Ninguno",0);
+    public static final String PRE = "PRE";
+    public static final String POS = "POS";
+    private String level;
+    public static final Plan NULL_PLAN= new Plan("", "Ninguno","PRE");
 
-    public Plan(String code, String name, int level) {
+    public Plan(String code, String name, String level) {
         this.code = code;
         this.name = name;
         setLevel(level);
     }
 
-    public void setLevel(int lvl){
-        if(!(lvl==PRE||lvl==POS)){
+    public void setLevel(String lvl){
+        if(!(lvl.equals(PRE)||lvl.equals(POS))){
             this.level=PRE;
         }
         this.level=lvl;
     }
     
-    public int getLevel(){
+    public String getLevel(){
         return this.level;
     }
     

@@ -20,11 +20,10 @@ public class NewSesion extends javax.swing.JFrame {
      */
     public NewSesion() {
         try {
-            buscador = new Buscador();
-            buscador.initPlans();
+            buscador = new SIAConnection();            
         } catch (Exception ex) {
             JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesion manualmente o vuelva a intentarlo mas tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
         }
         searchParameter = null;
 
@@ -500,10 +499,14 @@ public class NewSesion extends javax.swing.JFrame {
                     jLabel6.setText("Buscando...");
                     allButtonsSetEnable(false);
                     try {
-                        asignaturas = buscador.buscarAsignaturas(searchParameter);
+                        Plan plan= Plan.NULL_PLAN;
+                        if(planComboBox.getSelectedIndex()!=0){
+                            plan= (Plan)planComboBox.getSelectedItem();
+                        }                        
+                        asignaturas = buscador.buscarAsignaturas(searchParameter,plan);
                     } catch (IOException ex) {
                         JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesion manualmente o vuelva a intentarlo mas tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
                     } finally {
                         return "Done.";
                     }
@@ -519,7 +522,7 @@ public class NewSesion extends javax.swing.JFrame {
             }
             new MyWorker().execute();
         } else {
-            JOptionPane.showMessageDialog(this, "Digite mínimo 3 caracteres.", "Busqueda inválida", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Digite mínimo 3 caracteres.", "Búsqueda inválida", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_searchButtonActionPerformed
 
@@ -546,7 +549,7 @@ public class NewSesion extends javax.swing.JFrame {
                     try {
                         for (Asignatura asig : asignaturasToAdd) {
                             jLabel6.setText("Cargando \"" + asig.getNombre() + "\"...");
-                            buscador.setPlanFilter(asig.getPlan());
+                            //buscador.setPlanFilter(asig.getPlan());
                             Kairos.getSubjects().add(buscador.asignaturaCompleta(asig));
                         }
                         Kairos.setSesionDate(new GregorianCalendar().getTime());
@@ -554,7 +557,7 @@ public class NewSesion extends javax.swing.JFrame {
                         invokeMainFrame();
                     } catch (IOException ex) {
                         JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesion manualmente o vuelva a intentarlo mas tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
                         allButtonsSetEnable(true);
                         jProgressBar1.setVisible(false);
                         jLabel6.setText("");
@@ -570,7 +573,7 @@ public class NewSesion extends javax.swing.JFrame {
             }
             new MyWorker().execute();
         } else {
-            JOptionPane.showMessageDialog(this, "Agregue una o mas asignaturas o cargue una sesión anterior para continuar.", "No hay asignaturas seleccionadas", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Agregue una o más asignaturas o cargue una sesión anterior para continuar.", "No hay asignaturas seleccionadas", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -618,15 +621,7 @@ public class NewSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_preButtonActionPerformed
 
     private void planComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_planComboBoxActionPerformed
-        try {
-            if (planComboBox.getSelectedIndex() == 0) {
-                buscador.removePlanFilter();
-            } else {                
-                buscador.setPlanFilter((Plan) planComboBox.getSelectedItem());
-            }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "No se ha podido establecer conexión con el servidor.\nCargue una sesion manualmente o vuelva a intentarlo mas tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
-        }
+        
     }//GEN-LAST:event_planComboBoxActionPerformed
 
     private void posButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_posButtonActionPerformed
@@ -645,11 +640,12 @@ public class NewSesion extends javax.swing.JFrame {
                 planComboBox.setModel(new javax.swing.DefaultComboBoxModel(buscador.getPlansPos().toArray()));
             } else {
                 String[] s = {"--Seleccione un nivel académico--"};
-                planComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(s));
-                buscador.removePlanFilter();
+                planComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(s));                
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "No se ha podido establecer conexión con el servidor.\nCargue una sesion manualmente o vuelva a intentarlo mas tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+            if(preButton.isSelected())preButton.setSelected(false);
+            if(posButton.isSelected())posButton.setSelected(false);
         }
     }
 
@@ -708,8 +704,7 @@ public class NewSesion extends javax.swing.JFrame {
         creditsLabel1.setIcon(getNumberIcon(creditsDec));
     }
 
-    private void invokeMainFrame() {
-        buscador.terminate();
+    private void invokeMainFrame() {        
         this.dispose();
         java.awt.EventQueue.invokeLater(new Runnable() {
 
@@ -750,7 +745,7 @@ public class NewSesion extends javax.swing.JFrame {
         return icn;
     }
     private String searchParameter;
-    private Buscador buscador;
+    private SIAConnection buscador;
     private ArrayList<Asignatura> asignaturas;
     private ArrayList<Asignatura> asignaturasToAdd;
     // Variables declaration - do not modify//GEN-BEGIN:variables
