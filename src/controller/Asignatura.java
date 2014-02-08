@@ -74,6 +74,7 @@ public class Asignatura {
         this.label= new JLabel("  -->" + name);
         this.codigo= code;
         this.selected=null;
+        this.plan=Plan.NULL_PLAN;
     }
     
     public Asignatura(String name) {

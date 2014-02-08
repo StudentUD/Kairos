@@ -1,8 +1,6 @@
 package controller;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -11,8 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.json.JSONArray;
@@ -20,97 +16,99 @@ import org.json.JSONObject;
 
 public class SIAConnection {
 
-    public static final String[] AMZ = {"http://unsia.unal.edu.co/buscador/service/action.pub","http://unsia.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] BOG = {"http://www.sia.unal.edu.co/buscador/service/action.pub","http://sia.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] CAR = {"http://siafrontera.sia.unal.edu.co/buscador/service/action.pub","http://siafrontera.sia.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] MAN = {"http://sia.manizales.unal.edu.co/buscador/service/action.pub","http://sia.manizales.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] MED = {"http://sia1.medellin.unal.edu.co:9401/buscador/service/action.pub","http://sia1.medellin.unal.edu.co:9401/buscador/JSON-RPC"};
-    public static final String[] ORI = {"http://orinoquia.sia.unal.edu.co/buscador/service/action.pub","http://orinoquia.sia.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] PLM = {"http://www.sia.palmira.unal.edu.co/buscador/service/action.pub","http://www.sia.palmira.unal.edu.co/buscador/JSON-RPC"};
-    private static final int waitForJavaScriptTime = 500;
-    private static String SIA_URL[]=BOG;
+    public static final String[] AMZ = {"http://unsia.unal.edu.co/buscador/service/action.pub", "http://unsia.unal.edu.co/buscador/JSON-RPC"};
+    public static final String[] BOG = {"http://www.sia.unal.edu.co/buscador/service/action.pub", "http://sia.unal.edu.co/buscador/JSON-RPC"};
+    public static final String[] CAR = {"http://siafrontera.sia.unal.edu.co/buscador/service/action.pub", "http://siafrontera.sia.unal.edu.co/buscador/JSON-RPC"};
+    public static final String[] MAN = {"http://sia.manizales.unal.edu.co/buscador/service/action.pub", "http://sia.manizales.unal.edu.co/buscador/JSON-RPC"};
+    public static final String[] MED = {"http://sia1.medellin.unal.edu.co:9401/buscador/service/action.pub", "http://sia1.medellin.unal.edu.co:9401/buscador/JSON-RPC"};
+    public static final String[] ORI = {"http://orinoquia.sia.unal.edu.co/buscador/service/action.pub", "http://orinoquia.sia.unal.edu.co/buscador/JSON-RPC"};
+    public static final String[] PLM = {"http://www.sia.palmira.unal.edu.co/buscador/service/action.pub", "http://www.sia.palmira.unal.edu.co/buscador/JSON-RPC"};
+    private static String SIA_URL[] = BOG;
     private static List<Plan> planesPre;
     private static List<Plan> planesPos;
 
     public SIAConnection() throws IOException {
-        planesPre = null;
-        planesPos = null;
+        planesPre = retrievePlans(true);;
+        planesPos = retrievePlans(false);;
         initBuscadorAddress();
     }
 
     private static String retrieveHtml(String urlString) throws IOException {
         URL url = new URL(urlString);
-        HttpURLConnection connection = 
-                (HttpURLConnection)url.openConnection();
-        
+        HttpURLConnection connection =
+                (HttpURLConnection) url.openConnection();
+
         StringBuilder responseBuilder = new StringBuilder();
-        
+
         try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(connection.getInputStream(), 
-                    "ISO-8859-1"))) {
+                        new InputStreamReader(connection.getInputStream(),
+                        "ISO-8859-1"))) {
             String buffer;
             while ((buffer = in.readLine()) != null) {
                 responseBuilder.append(buffer);
             }
         }
-        
+
         return responseBuilder.toString();
     }
-    
-        private static List<Plan> retrievePlans(boolean undergraduate) throws IOException {
+
+    private static List<Plan> retrievePlans(boolean undergraduate) throws IOException {
         String html = retrieveHtml(SIA_URL[0]);
-        
+
         // Regular expressions should not be used to parse HTML, but we're 
         // badass
         // http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags
         // http://www.codinghorror.com/blog/2009/11/parsing-html-the-cthulhu-way.html
-        
+
         // Arguably, we're "just" processing some strings.
-        
-        String startTag = undergraduate ? 
-                "<select id=\"valor_criterio_planestudio_PRE\">" :
-                "<select style=\"display:none\" id=\"valor_criterio_planestudio_POS\">";
-        
+
+        String startTag = undergraduate
+                ? "<select id=\"valor_criterio_planestudio_PRE\">"
+                : "<select style=\"display:none\" id=\"valor_criterio_planestudio_POS\">";
+
         String endTag = "</select>";
-        
+
         int startIndex = html.indexOf(startTag);
-        if (startIndex == -1)
+        if (startIndex == -1) {
             throw new IllegalStateException("Couldn't find start tag");
-        
+        }
+
         int endIndex = html.indexOf(endTag, startIndex + 1);
-        if (endIndex == -1)
+        if (endIndex == -1) {
             throw new IllegalStateException("Couldn't find end tag");
-        
-        String content = html.substring(startIndex + startTag.length(), 
+        }
+
+        String content = html.substring(startIndex + startTag.length(),
                 endIndex + endTag.length());
-        
-        Pattern pattern = 
+
+        Pattern pattern =
                 Pattern.compile("<option value=\"(\\d+)\">\\((\\d+)\\) ([^<]+)</option>");
         Matcher matcher = pattern.matcher(content);
-        
+
         List<Plan> result = new ArrayList<>();
         result.add(Plan.NULL_PLAN);
-        
-        while(matcher.find()) {
-            if(!matcher.group(1).equals(matcher.group(2)))
+
+        while (matcher.find()) {
+            if (!matcher.group(1).equals(matcher.group(2))) {
                 throw new IllegalStateException("Unexpected code value");
-            
-            Plan plan = new Plan(matcher.group(1),matcher.group(3),undergraduate?"PRE":"POS");            
+            }
+
+            Plan plan = new Plan(matcher.group(1), matcher.group(3), undergraduate ? "PRE" : "POS");
             result.add(plan);
-        }        
+        }
         return result;
     }
-    
+
     public List<Plan> getPlansPreg() throws Exception {
         if (planesPre == null) {
-            planesPre=retrievePlans(true);
+            planesPre = retrievePlans(true);
         }
         return planesPre;
     }
 
     public List<Plan> getPlansPos() throws Exception {
         if (planesPos == null) {
-            planesPos=retrievePlans(false);
+            planesPos = retrievePlans(false);
         }
         return planesPos;
     }
@@ -178,13 +176,19 @@ public class SIAConnection {
     }
 
     public Asignatura asignaturaCompleta(Asignatura asig) throws MalformedURLException, IOException, InterruptedException {
-        JSONObject requestContent = new JSONObject();
-        requestContent.put("method", "buscador.obtenerGruposAsignaturas");
-        requestContent.put("params",
-                new Object[]{asig.getCodigo(), ""});
-        JSONObject responseJSON = performSIARequest(requestContent);
-        JSONArray groupArray = responseJSON.getJSONObject("result").getJSONArray("list");
-
+        JSONArray groupArray = null;
+        int count =1;
+        while (groupArray == null || groupArray.length() < 1) {
+            if(count++>=50){
+                continue;
+            }
+            JSONObject requestContent = new JSONObject();
+            requestContent.put("method", "buscador.obtenerGruposAsignaturas");
+            requestContent.put("params", new Object[]{asig.getCodigo(), ""});
+            JSONObject responseJSON = performSIARequest(requestContent);            
+            groupArray = responseJSON.getJSONObject("result").getJSONArray("list");
+            Thread.sleep(500);            
+        }
 
         final String[][] SCHEDULE_KEYS = {
             {"horario_lunes", "aula_lunes"},
@@ -199,18 +203,15 @@ public class SIAConnection {
         for (int i = 0; i < groupArray.length(); ++i) {
 
             JSONObject groupJSON = groupArray.getJSONObject(i);
-
-            //////////
             JSONArray restrictionsArray =
-                    groupJSON.getJSONObject("planlimitacion")
-                    .getJSONArray("list");
+                    groupJSON.getJSONObject("planlimitacion").getJSONArray("list");
 
 
-            boolean flag = false;
+            boolean isAvailable = true;
             for (int j = 0; j < restrictionsArray.length(); j++) {
                 String code = asig.getPlan().getCode();
                 if (code.equals("")) {
-                    flag = true;
+                    isAvailable = true;
                     break;
                 }
                 String limitCode = restrictionsArray.getJSONObject(j).getString("plan");
@@ -218,26 +219,26 @@ public class SIAConnection {
 
                 if (code.equals(limitCode)) {
                     if (limitType.equals("N")) {
-                        flag = false;
+                        isAvailable = false;
                         break;
                     }
                     if (limitType.equals("A")) {
-                        flag = true;
+                        isAvailable = true;
                         break;
                     }
                 }
-                if(j==restrictionsArray.length()-1){
+                if (j == restrictionsArray.length() - 1) {
                     if (limitType.equals("N")) {
-                        flag = true;
+                        isAvailable = true;
                         break;
                     }
                     if (limitType.equals("A")) {
-                        flag = false;
+                        isAvailable = false;
                         break;
                     }
                 }
             }
-            if (!flag) {
+            if (!isAvailable) {
                 continue;
             }
 
@@ -245,7 +246,7 @@ public class SIAConnection {
             String code = groupJSON.getString("codigo");
             String teacher = groupJSON.getString("nombredocente");
             if (teacher.equals("  ")) {
-                teacher = "<--NO ASIGNADO-->";
+                teacher = "[Información pendiente]";
             }
             int total = groupJSON.getInt("cupostotal");
 
@@ -262,7 +263,6 @@ public class SIAConnection {
                         scheduleBuilder.append(value);
                     }
                 }
-
                 scheduleBuilder.append("	");
             }
 
@@ -278,12 +278,9 @@ public class SIAConnection {
 
 
         }
-        Thread.sleep(waitForJavaScriptTime);
         return asig;
     }
 
-    //public void setPlanFilter(Plan plan) throws IOException {    }
-    //public void removePlanFilter() throws IOException {    }
     private static JSONObject performSIARequest(JSONObject requestContent)
             throws MalformedURLException, IOException {
         URL siaUrl = new URL(SIA_URL[1]);
@@ -295,14 +292,14 @@ public class SIAConnection {
         connection.setRequestMethod("POST");
 
         try (OutputStreamWriter out =
-                new OutputStreamWriter(connection.getOutputStream())) {
+                        new OutputStreamWriter(connection.getOutputStream())) {
             out.write(requestContent.toString());
         }
 
         StringBuilder responseBuilder = new StringBuilder();
 
         try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(connection.getInputStream()))) {
+                        new InputStreamReader(connection.getInputStream()))) {
             String buffer;
             while ((buffer = in.readLine()) != null) {
                 responseBuilder.append(buffer);
@@ -320,5 +317,5 @@ public class SIAConnection {
         res = res.replaceAll("Ó", "O");
         res = res.replaceAll("Ú", "U");
         return res;
-    }    
+    }
 }
