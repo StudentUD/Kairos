@@ -27,7 +27,7 @@ public class SIAConnection {
     private static List<Plan> planesPre;
     private static List<Plan> planesPos;
 
-    public SIAConnection() throws IOException {
+    public SIAConnection() throws IOException {        
         planesPre = retrievePlans(true);;
         planesPos = retrievePlans(false);;
         initBuscadorAddress();
@@ -150,14 +150,13 @@ public class SIAConnection {
     }
 
     public ArrayList<Asignatura> buscarAsignaturas(String sub, Plan planFilter) throws MalformedURLException, IOException {
-        String subjectMatch = clearSubjectMatch(sub);
+        String subjectMatch = cleanSubjectMatch(sub);
         ArrayList<Asignatura> subjects = new ArrayList<>();
 
 
         JSONObject requestContent = new JSONObject();
         requestContent.put("method", "buscador.obtenerAsignaturas");
-        requestContent.put("params", new Object[]{subjectMatch, "PRE", "", planFilter.getLevel(), planFilter.getCode(), "", 1, Integer.MAX_VALUE});
-
+        requestContent.put("params", new Object[]{subjectMatch, "PRE", "", planFilter.getLevel(), planFilter.getCode(), "", 1, Integer.MAX_VALUE});        
         JSONObject responseJSON = performSIARequest(requestContent);
         JSONArray subjectArray = responseJSON.getJSONObject("result").getJSONObject("asignaturas").getJSONArray("list");
         for (int i = 0; i < subjectArray.length(); ++i) {
@@ -282,17 +281,17 @@ public class SIAConnection {
     }
 
     private static JSONObject performSIARequest(JSONObject requestContent)
-            throws MalformedURLException, IOException {
+            throws MalformedURLException, IOException {        
         URL siaUrl = new URL(SIA_URL[1]);
         HttpURLConnection connection =
                 (HttpURLConnection) siaUrl.openConnection();
-
+        
         connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
 
         try (OutputStreamWriter out =
-                        new OutputStreamWriter(connection.getOutputStream())) {
+                        new OutputStreamWriter(connection.getOutputStream(),"UTF-8")) {
             out.write(requestContent.toString());
         }
 
@@ -309,7 +308,7 @@ public class SIAConnection {
         return new JSONObject(responseBuilder.toString());
     }
 
-    private static String clearSubjectMatch(String sm) {
+    private static String cleanSubjectMatch(String sm) {
         String res = sm.toUpperCase();
         res = res.replaceAll("Á", "A");
         res = res.replaceAll("É", "E");

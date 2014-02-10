@@ -2,9 +2,11 @@ package controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,8 +103,7 @@ public class Kairos {
 
     public static ArrayList<String> getData(File file) throws Exception {
         ArrayList<String> data = new ArrayList<>();
-        FileReader fileReader = new FileReader(file);
-        BufferedReader reader = new BufferedReader(fileReader);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
         String line;
         while ((line = reader.readLine()) != null) {
             data.add(line);

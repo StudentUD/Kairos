@@ -3,6 +3,7 @@ package view;
 import controller.*;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import javax.swing.JFrame;
@@ -25,8 +26,7 @@ public class NewSesion extends javax.swing.JFrame {
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
         }
-        searchParameter = null;
-
+        
         asignaturas = new ArrayList<>();
         asignaturasToAdd = new ArrayList<>();
 
@@ -489,7 +489,7 @@ public class NewSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        searchParameter = searchTextField.getText().replaceAll("-", "").replaceAll("%", "");
+        final String searchParameter = searchTextField.getText().replaceAll("-", "").replaceAll("%", "");             
         if (searchParameter.length() >= 3) {
             class MyWorker extends SwingWorker {
 
@@ -688,7 +688,7 @@ public class NewSesion extends javax.swing.JFrame {
         removeButton.setEnabled(b);
         removeAllButton.setEnabled(b);
         searchButton.setEnabled(b);
-        loadButton.setEnabled(b);
+        loadButton.setEnabled(b);        
     }
 
     private void showCredits() {
@@ -744,7 +744,7 @@ public class NewSesion extends javax.swing.JFrame {
         }
         return icn;
     }
-    private String searchParameter;
+    
     private SIAConnection buscador;
     private ArrayList<Asignatura> asignaturas;
     private ArrayList<Asignatura> asignaturasToAdd;
