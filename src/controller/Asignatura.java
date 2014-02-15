@@ -67,6 +67,10 @@ public class Asignatura {
         return grupos;
     }
 
+    public void setGrupos(ArrayList<Group> grupos) {
+        this.grupos = grupos;
+    }  
+    
     public Asignatura(String name,String code) {
         this.name = name;        
         this.grupos = new ArrayList<>();

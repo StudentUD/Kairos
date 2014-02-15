@@ -4,17 +4,20 @@ import controller.*;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
@@ -25,6 +28,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() {
         initComponents();
+        this.subjectPanels = new ArrayList<>();
         jTable1.setDefaultRenderer(Object.class, new CustomCellRenderer());
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
@@ -60,6 +64,8 @@ public class MainFrame extends javax.swing.JFrame {
         randomChoiseButton = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
+        refreshButton = new javax.swing.JButton();
+        deleteSubjectButton = new javax.swing.JButton();
         view = new javax.swing.JPanel();
         deactivateButton = new javax.swing.JToggleButton();
         colorByPlacesButton = new javax.swing.JToggleButton();
@@ -109,29 +115,31 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getColumn(0).setMinWidth(60);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(100);
-        jTable1.getColumnModel().getColumn(0).setHeaderValue("Hora");
-        jTable1.getColumnModel().getColumn(1).setMinWidth(60);
-        jTable1.getColumnModel().getColumn(1).setHeaderValue("Lunes");
-        jTable1.getColumnModel().getColumn(2).setMinWidth(60);
-        jTable1.getColumnModel().getColumn(2).setHeaderValue("Martes");
-        jTable1.getColumnModel().getColumn(3).setMinWidth(60);
-        jTable1.getColumnModel().getColumn(3).setHeaderValue("Miércoles");
-        jTable1.getColumnModel().getColumn(4).setMinWidth(60);
-        jTable1.getColumnModel().getColumn(4).setHeaderValue("Jueves");
-        jTable1.getColumnModel().getColumn(5).setMinWidth(60);
-        jTable1.getColumnModel().getColumn(5).setHeaderValue("Viernes");
-        jTable1.getColumnModel().getColumn(6).setMinWidth(60);
-        jTable1.getColumnModel().getColumn(6).setHeaderValue("Sábado");
-        jTable1.getColumnModel().getColumn(7).setMinWidth(60);
-        jTable1.getColumnModel().getColumn(7).setHeaderValue("Domingo");
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(60);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(100);
+            jTable1.getColumnModel().getColumn(0).setHeaderValue("Hora");
+            jTable1.getColumnModel().getColumn(1).setMinWidth(60);
+            jTable1.getColumnModel().getColumn(1).setHeaderValue("Lunes");
+            jTable1.getColumnModel().getColumn(2).setMinWidth(60);
+            jTable1.getColumnModel().getColumn(2).setHeaderValue("Martes");
+            jTable1.getColumnModel().getColumn(3).setMinWidth(60);
+            jTable1.getColumnModel().getColumn(3).setHeaderValue("Miércoles");
+            jTable1.getColumnModel().getColumn(4).setMinWidth(60);
+            jTable1.getColumnModel().getColumn(4).setHeaderValue("Jueves");
+            jTable1.getColumnModel().getColumn(5).setMinWidth(60);
+            jTable1.getColumnModel().getColumn(5).setHeaderValue("Viernes");
+            jTable1.getColumnModel().getColumn(6).setMinWidth(60);
+            jTable1.getColumnModel().getColumn(6).setHeaderValue("Sábado");
+            jTable1.getColumnModel().getColumn(7).setMinWidth(60);
+            jTable1.getColumnModel().getColumn(7).setHeaderValue("Domingo");
+        }
 
         buttonsPane.setLayout(new javax.swing.BoxLayout(buttonsPane, javax.swing.BoxLayout.X_AXIS));
         jScrollPane2.setViewportView(buttonsPane);
 
-        jLabel1.setText("(Número del grupo - Nombre del docente)                 Grupos actualizados el dia");
+        jLabel1.setText("(Número del grupo - Nombre del docente)                 Grupos actualizados el dia:");
 
         dateLabel.setText("--/--/--  --:--");
 
@@ -257,7 +265,7 @@ public class MainFrame extends javax.swing.JFrame {
         tabsPane.addTab("Archivo", file);
 
         cleanButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/gnome_edit_clear.png"))); // NOI18N
-        cleanButton.setText("Limpiar");
+        cleanButton.setText("Limpiar selección");
         cleanButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         cleanButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         cleanButton.addActionListener(new java.awt.event.ActionListener() {
@@ -291,6 +299,26 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel11))
         );
 
+        refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/refresh.png"))); // NOI18N
+        refreshButton.setText("Actualizar grupos");
+        refreshButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        refreshButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+
+        deleteSubjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/minus white.png"))); // NOI18N
+        deleteSubjectButton.setText("Eliminar asignatura");
+        deleteSubjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteSubjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteSubjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteSubjectButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout editLayout = new javax.swing.GroupLayout(edit);
         edit.setLayout(editLayout);
         editLayout.setHorizontalGroup(
@@ -300,7 +328,11 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(randomChoiseButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cleanButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 583, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(refreshButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteSubjectButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 276, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         editLayout.setVerticalGroup(
@@ -311,7 +343,9 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(randomChoiseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(editLayout.createSequentialGroup()
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteSubjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -500,7 +534,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void openSesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSesButtonActionPerformed
         if (Kairos.showConfirmDialog() && Kairos.cargarSesion()) {
             clearTable();
-            deactivateViewFeatures();            
+            deactivateViewFeatures();
             init();
         }
     }//GEN-LAST:event_openSesButtonActionPerformed
@@ -553,8 +587,48 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveToExcelButtonActionPerformed
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
-        new About(this,true).setVisible(true);
+        new About(this, true).setVisible(true);
     }//GEN-LAST:event_aboutButtonActionPerformed
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        class MyWorker extends SwingWorker {
+
+            @Override
+            protected String doInBackground() {
+                dateLabel.setText("ACTUALIZANDO GRUPOS, ESPERE...");
+                SIAConnection sia;
+                try {
+                    sia = new SIAConnection();
+                    for (Asignatura asig : Kairos.getSubjects()) {
+                        sia.asignaturaCompleta(asig);
+                    }
+                    Kairos.setSesionDate(new java.util.GregorianCalendar().getTime());
+                    Kairos.setSavedSesion(false);
+                    clearTable();
+                    deactivateViewFeatures();
+                    init();
+                } catch (Exception ex) {
+                    NewSesion.showConnectionProblemDialog(new javax.swing.JFrame());
+                } finally {
+                    if (Kairos.getSessionDate() != null) {
+                        dateLabel.setText(sdf.format(Kairos.getSessionDate()));
+                    } else {
+                        dateLabel.setText("--/--/--  --:--");
+                    }
+                    return "Done";
+                }
+            }
+
+            @Override
+            protected void done() {
+            }
+        }
+        new MyWorker().execute();
+    }//GEN-LAST:event_refreshButtonActionPerformed
+
+    private void deleteSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSubjectButtonActionPerformed
+        new DeleteSubject(this, true, subjectPanels).setVisible(true);
+    }//GEN-LAST:event_deleteSubjectButtonActionPerformed
 
     public void init() {
         if (Kairos.getSessionDate() != null) {
@@ -564,51 +638,26 @@ public class MainFrame extends javax.swing.JFrame {
         }
         this.buttonsPane.removeAll();
         this.buttonsPane.add(Box.createRigidArea(new Dimension(15, 0)));
-
+        this.subjectPanels.clear();
         for (Asignatura asig : Kairos.getSubjects()) {
-
-            JPanel panel = new JPanel();
-            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-            panel.add(asig.getLabel());
-
-            for (Button boton : asig.getButtons()) {               
-                panel.add(boton);
-                panel.add(boton.getProgressBar());
-                boton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent ae) {
-                        Button bot = (Button) ae.getSource();
-                        if (bot.isSelected()) {
-                            if (bot.getMateria().getSelected()!=null) {
-                                bot.setSelected(false);
-                                bot.getMateria().getSelected().doClick();
-                                bot.setSelected(true);
-                            }
-                            bot.getMateria().setSelected(bot);
-                        } else {
-                            bot.getMateria().setSelected(null);
-                        }
-                        selectButton(bot);
-                        addBloq(bot);
-                    }
-                });
-            }            
-            panel.add(Box.createVerticalGlue());
+            SubjectPanel panel = new SubjectPanel(this, asig);
+            this.subjectPanels.add(panel);
             this.buttonsPane.add(panel);
             this.buttonsPane.add(Box.createHorizontalGlue());
             this.buttonsPane.add(Box.createRigidArea(new Dimension(15, 0)));
-            this.buttonsPane.validate();
         }
+        this.buttonsPane.validate();
         for (Asignatura asig : Kairos.getSubjects()) {
-            if(asig.getSelected()!=null){
-                Button bot=asig.getSelected();
+            if (asig.getSelected() != null) {
+                Button bot = asig.getSelected();
                 asig.setSelected(null);
                 bot.doClick();
             }
         }
+        this.buttonsPane.repaint();
     }
 
-    private void addBloq(Button boton) {
+    public void addBloq(Button boton) {
         Group grupo = boton.getGrupo();
         for (Block bloque : grupo.getHorario()) {
             String value = null;
@@ -623,30 +672,38 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void clearSelection() {
         for (Asignatura asig : Kairos.getSubjects()) {
-            if (asig.getSelected()!=null) {
+            if (asig.getSelected() != null) {
                 asig.getSelected().doClick();
             }
         }
     }
 
-    private void deactivateViewFeatures(){        
-        if(filterByPlaces)deactivateButton.doClick();
-        if(colorByPlaces)colorByPlacesButton.doClick();
-        if(progressBar)progressBarButton.doClick();
-        if(!colorSched)colorSchedButton.doClick();
+    private void deactivateViewFeatures() {
+        if (filterByPlaces) {
+            deactivateButton.doClick();
+        }
+        if (colorByPlaces) {
+            colorByPlacesButton.doClick();
+        }
+        if (progressBar) {
+            progressBarButton.doClick();
+        }
+        if (!colorSched) {
+            colorSchedButton.doClick();
+        }
     }
-    
+
     private void clearTable() {
-        for(int i=1; i<8; i++){
-            for(int j=0; j<16;j++){
-            jTable1.setValueAt(null, j, i);
+        for (int i = 1; i < 8; i++) {
+            for (int j = 0; j < 16; j++) {
+                jTable1.setValueAt(null, j, i);
             }
-        }        
+        }
     }
 
     private void randomChoise() {
         for (Asignatura materia : Kairos.getSubjects()) {
-            if (materia.getSelected()==null) {
+            if (materia.getSelected() == null) {
                 ArrayList<Button> botones = new ArrayList<>();
                 for (Button bot : materia.getButtons()) {
                     if (bot.isEnabled()) {
@@ -681,16 +738,35 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void selectButton(Button bot) {
-        for(Button b: bot.getOverlapped()){
-            if(bot.isSelected()){
+    public void selectButton(Button bot) {
+        for (Button b : bot.getOverlapped()) {
+            if (bot.isSelected()) {
                 b.addConflictive();
-            }else{
+            } else {
                 b.removeConflictive();
             }
             onOffButton(b);
-        }        
+        }
     }
+
+    public void deteleSubject(SubjectPanel panel) {
+        Button b = panel.getSubject().getSelected();
+        if (b != null) {
+            b.doClick();
+        }
+        Kairos.getSubjects().remove(panel.getSubject());
+        this.buttonsPane.removeAll();
+        this.buttonsPane.add(Box.createRigidArea(new Dimension(15, 0)));
+        for (SubjectPanel pan : this.subjectPanels) {
+            this.buttonsPane.add(pan);
+            this.buttonsPane.add(Box.createHorizontalGlue());
+            this.buttonsPane.add(Box.createRigidArea(new Dimension(15, 0)));
+        }
+        this.buttonsPane.validate();
+        Kairos.setSavedSesion(false);
+    }
+
+    private ArrayList<SubjectPanel> subjectPanels;
     private boolean colorSched = true;
     private boolean colorByPlaces = false;
     private boolean progressBar = false;
@@ -705,6 +781,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel dateLabel;
     private javax.swing.JPanel datePane;
     private javax.swing.JToggleButton deactivateButton;
+    private javax.swing.JButton deleteSubjectButton;
     private javax.swing.JPanel edit;
     private javax.swing.JButton exitButton;
     private javax.swing.JPanel file;
@@ -725,6 +802,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton openSesButton;
     private javax.swing.JToggleButton progressBarButton;
     private javax.swing.JButton randomChoiseButton;
+    private javax.swing.JButton refreshButton;
     private javax.swing.JButton saveSesButton;
     private javax.swing.JButton saveToExcelButton;
     private javax.swing.JTabbedPane tabsPane;

@@ -178,7 +178,7 @@ public class SIAConnection {
         JSONArray groupArray = null;
         int count =1;
         while (groupArray == null || groupArray.length() < 1) {
-            if(count++>=50){
+            if(count++>=10){
                 continue;
             }
             JSONObject requestContent = new JSONObject();
@@ -199,12 +199,13 @@ public class SIAConnection {
             {"horario_domingo", "aula_domingo"}
         };
 
+        ArrayList<Group> grupos= new ArrayList<>();
+        
         for (int i = 0; i < groupArray.length(); ++i) {
 
             JSONObject groupJSON = groupArray.getJSONObject(i);
             JSONArray restrictionsArray =
                     groupJSON.getJSONObject("planlimitacion").getJSONArray("list");
-
 
             boolean isAvailable = true;
             for (int j = 0; j < restrictionsArray.length(); j++) {
@@ -269,14 +270,19 @@ public class SIAConnection {
 
             try {
                 Group grup = Kairos.parseGroup(str.toString());
-                asig.getGrupos().add(grup);
-                new Button(grup, asig);
+                grupos.add(grup);
+                
             } catch (Exception ex) {
                 System.out.println("Group parse exception: " + str.toString());
             }
 
 
         }
+        asig.getButtons().clear();
+        asig.setGrupos(grupos);
+        for(Group grup: grupos){
+            new Button(grup, asig);
+        }        
         return asig;
     }
 
@@ -298,7 +304,7 @@ public class SIAConnection {
         StringBuilder responseBuilder = new StringBuilder();
 
         try (BufferedReader in = new BufferedReader(
-                        new InputStreamReader(connection.getInputStream()))) {
+                        new InputStreamReader(connection.getInputStream(),"UTF-8"))) {
             String buffer;
             while ((buffer = in.readLine()) != null) {
                 responseBuilder.append(buffer);

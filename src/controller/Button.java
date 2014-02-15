@@ -20,6 +20,9 @@ public class Button extends JRadioButton {
     private JProgressBarColored progressBar;
     
     public LinkedHashSet<Button> getOverlapped(){
+        if(this.overlapped==null){
+            this.initOverlapped();
+        }            
         return this.overlapped;
     }
     
@@ -54,6 +57,7 @@ public class Button extends JRadioButton {
         this.grupo = grupo;
         this.materia = materia;        
         this.color = null;
+        this.overlapped=null;
         int maxValue = grupo.getCuposTotales();
         int value = grupo.getCupos();
         if (value > maxValue) {
@@ -69,8 +73,7 @@ public class Button extends JRadioButton {
         progressBar.setMaximumSize(new Dimension(500, 15));
         progressBar.setVisible(false);
         this.setToolTipText("Cupos disp: "+grupo.getCupos()+"/"+grupo.getCuposTotales());
-        materia.getButtons().add(this);
-        initOverlapped();
+        materia.getButtons().add(this);        
     }
 
     private void initOverlapped(){

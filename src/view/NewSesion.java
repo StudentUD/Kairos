@@ -3,10 +3,8 @@ package view;
 import controller.*;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
@@ -23,8 +21,7 @@ public class NewSesion extends javax.swing.JFrame {
         try {
             buscador = new SIAConnection();            
         } catch (Exception ex) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+            showConnectionProblemDialog(new javax.swing.JFrame());
         }
         
         asignaturas = new ArrayList<>();
@@ -505,8 +502,7 @@ public class NewSesion extends javax.swing.JFrame {
                         }                        
                         asignaturas = buscador.buscarAsignaturas(searchParameter,plan);
                     } catch (IOException ex) {
-                        JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+                        showConnectionProblemDialog(new javax.swing.JFrame());
                     } finally {
                         return "Done.";
                     }
@@ -556,8 +552,7 @@ public class NewSesion extends javax.swing.JFrame {
                         Kairos.setSavedSesion(false);
                         invokeMainFrame();
                     } catch (IOException ex) {
-                        JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+                        showConnectionProblemDialog(new javax.swing.JFrame());
                         allButtonsSetEnable(true);
                         jProgressBar1.setVisible(false);
                         jLabel6.setText("");
@@ -643,7 +638,7 @@ public class NewSesion extends javax.swing.JFrame {
                 planComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(s));                
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+            showConnectionProblemDialog(this);
             if(preButton.isSelected())preButton.setSelected(false);
             if(posButton.isSelected())posButton.setSelected(false);
         }
@@ -743,6 +738,10 @@ public class NewSesion extends javax.swing.JFrame {
             icn = new javax.swing.ImageIcon(getClass().getResource("/view/icon/numbers/" + i + ".png"));
         }
         return icn;
+    }
+    
+    public static void showConnectionProblemDialog(javax.swing.JFrame frame){
+        JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
     }
     
     private SIAConnection buscador;
