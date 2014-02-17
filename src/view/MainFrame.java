@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -600,7 +601,14 @@ public class MainFrame extends javax.swing.JFrame {
                 try {
                     sia = new SIAConnection();
                     for (Asignatura asig : Kairos.getSubjects()) {
+                        String selectedGroup=asig.getSelected().getGrupo().getNumero();                        
                         sia.asignaturaCompleta(asig);
+                        for(Button bot: asig.getButtons()){
+                            if(bot.getGrupo().getNumero().equals(selectedGroup)){
+                                asig.setSelected(bot);
+                                break;
+                            }
+                        }
                     }
                     Kairos.setSesionDate(new java.util.GregorianCalendar().getTime());
                     Kairos.setSavedSesion(false);

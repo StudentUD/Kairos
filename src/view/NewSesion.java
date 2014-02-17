@@ -289,7 +289,7 @@ public class NewSesion extends javax.swing.JFrame {
             .addComponent(subjectPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        titlePane.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cesar A. Villamizar C.", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.TOP));
+        titlePane.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "SEDE: "+controller.Kairos.getSedeName(), javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.TOP));
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/logo.png"))); // NOI18N
 
@@ -393,7 +393,7 @@ public class NewSesion extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel2))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(toAddScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+            .addComponent(toAddScrollPane)
         );
         toAddPaneLayout.setVerticalGroup(
             toAddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,7 +402,7 @@ public class NewSesion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(toAddScrollPane))
+                .addComponent(toAddScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
         );
 
         jLabel4.setText("Resultados de la búsqueda:");
@@ -425,7 +425,7 @@ public class NewSesion extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(resultsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+            .addComponent(resultsScrollPane)
         );
         resultsPaneLayout.setVerticalGroup(
             resultsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -434,7 +434,7 @@ public class NewSesion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(resultsScrollPane))
+                .addComponent(resultsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout searchAddPaneLayout = new javax.swing.GroupLayout(searchAddPane);
