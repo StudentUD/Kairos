@@ -3,6 +3,7 @@ package controller;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import javax.swing.JLabel;
 
 /**
@@ -19,7 +20,35 @@ public class Asignatura {
     private Button selected;   
     private JLabel label;
     private Plan plan;
-        
+       
+    public static final Color[][] colors={{new Color(71,172,177),new Color(255,255,255)},
+                                        {new Color(242,101,34),new Color(255,255,255)},
+                                        {new Color(255,205,51),new Color(255,255,255)},
+                                        {new Color(103,103,102),new Color(255,255,255)},
+                                        {new Color(119,196,212),new Color(255,255,255)},
+                                        {new Color(68,154,167),new Color(255,255,255)},
+                                        {new Color(121,194,105),new Color(255,255,255)},
+                                        {new Color(241,140,50),new Color(255,255,255)},
+                                        {new Color(191,99,166),new Color(255,255,255)},
+                                        {new Color(234,132,109),new Color(255,255,255)},
+                                        {new Color(22,82,142),new Color(255,255,255)},
+                                        {new Color(230,74,75),new Color(255,255,255)},
+                                        {new Color(163,198,192),new Color(255,255,255)},
+                                        {new Color(195,214,155),new Color(79,98,40)},
+                                        {new Color(250,192,144),new Color(152,72,7)},
+                                        {new Color(147,205,221),new Color(33,89,104)},
+                                        {new Color(179,162,199),new Color(64,50,106)},
+                                        {new Color(217,150,148),new Color(99,37,35)},
+                                        {new Color(255,232,175),new Color(255,150,46)},
+   
+    };
+    private static int currentColor= new Random().nextInt(colors.length);
+    
+    public static Color[] getNextColorPair(){        
+        int i=(++currentColor)%(colors.length);        
+        return colors[i];
+    }    
+    
     public void setSelected(Button selected) {
         this.selected = selected;
         if(selected!=null){

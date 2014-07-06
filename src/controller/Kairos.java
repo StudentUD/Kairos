@@ -1,12 +1,17 @@
 package controller;
 
+import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,17 +45,6 @@ public class Kairos {
     private static final String[] sedes={"AMAZONIA","BOGOTA","CARIBE","MANIZALES","MEDELLIN","ORINOQUIA","PALMIRA"};
     private static int selectedSede=1;
     
-    public static String returnFunnyMSG(int credits) {
-        if (credits < 10) {
-            return "¿Menos de 10 créditos?\nSupongo que piensas tener mucho tiempo libre.";
-        } else if (credits >= 20 && credits < 25) {
-            return "¡Más de 20 créditos!\n¿Quien te crees que eres? ¿Superman?";
-        } else if (credits >= 25) {
-            return "Piensa en aquellos que te quieren.\n¡No cometas un suicidio académico!";
-        }
-        return null;
-    }
-
     public static void setSede(int i){
         selectedSede=i;
     }
@@ -151,7 +145,7 @@ public class Kairos {
                     if (clsRoom) {
                         group.getHorario().add(new Block(hora, horaFin, i, salones[j]));
                     } else {
-                        group.getHorario().add(new Block(hora, horaFin, i));
+                        group.getHorario().add(new Block(hora, horaFin, i,"--"));
                     }
                 }
             }
@@ -163,7 +157,8 @@ public class Kairos {
         subjects = new LinkedHashSet<>();
         ArrayList<String> datos = getData(dataFile);
         Asignatura materia = null;
-
+        Color[] asigColor={Color.WHITE,Color.BLACK};
+        
         String fecha = datos.get(0);
         datos.remove(0);
         try {
@@ -174,7 +169,7 @@ public class Kairos {
         for (String dat : datos) {
             if (!(dat.length() < 2)) {
                 if (dat.charAt(0) == '*') {
-
+                    asigColor=Asignatura.getNextColorPair();
                     String[] asig = dat.substring(1).split("-");
                     if (asig.length > 1) {
                         materia = new Asignatura(asig[0], asig[1]);
@@ -197,6 +192,8 @@ public class Kairos {
                         grupo = parseGroup(dat);
                         boton = new Button(grupo, materia);
                     }
+                    grupo.setAsignatura(materia);
+                    grupo.setColors(asigColor);
                     materia.getGrupos().add(grupo);
                 }
             }
@@ -221,7 +218,7 @@ public class Kairos {
         if (result == JFileChooser.APPROVE_OPTION) {
             File archivo = chooser.getSelectedFile();
             try {
-                FileWriter writer = new FileWriter(archivo);
+                Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8"));                
                 writer.write(date + System.getProperty("line.separator"));
                 for (Asignatura asig : subjects) {
                     writer.write("*" + asig.getNombre() + "-" + asig.getCodigo() + "-" + asig.getCreditos()+"-"+asig.getPlan().getCode()+"-"+asig.getPlan().getLevel() + System.getProperty("line.separator"));

@@ -1,5 +1,7 @@
 package controller;
 
+import java.awt.Color;
+
 /**
  *
  * @author Cesar A. Villamizar C.
@@ -10,6 +12,20 @@ public class Block {
     private int horaFin;
     private int dia;
     private String clsRoom;
+    private Color[] colors;
+    private String Asignatura;
+
+    public Color[] getColors() {
+        return colors;
+    }
+
+    public void setColors(Color[] colors) {
+        this.colors = colors;
+    }  
+
+    public void setAsignatura(String Asignatura) {
+        this.Asignatura = Asignatura;
+    }   
     
     public String getSalon(){
         return this.clsRoom;
@@ -26,11 +42,7 @@ public class Block {
     public int getDia() {
         return dia;
     }
-
-    public Block(int hora, int horaFin, int dia) {
-        this(hora,horaFin,dia," ");
-    }
-    
+        
     public Block(int hora, int horaFin, int dia, String salon) {
         this.hora = hora;
         this.horaFin = horaFin;
@@ -50,5 +62,10 @@ public class Block {
                 return true;
             }
         return false;
+    }
+        
+    @Override
+    public String toString(){
+        return this.clsRoom+":"+this.Asignatura;
     }
 }

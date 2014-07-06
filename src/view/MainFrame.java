@@ -665,12 +665,12 @@ public class MainFrame extends javax.swing.JFrame {
         this.buttonsPane.repaint();
     }
 
-    public void addBloq(Button boton) {
+    public void paintBloq(Button boton) {
         Group grupo = boton.getGrupo();
         for (Block bloque : grupo.getHorario()) {
-            String value = null;
+            Block value = null;
             if (boton.isSelected()) {
-                value = bloque.getSalon() + ": " + boton.getMateria().getNombre();
+                value = bloque;
             }
             for (int j = bloque.getHora(); j < bloque.getHoraFin(); j++) {
                 jTable1.setValueAt(value, j - 6, bloque.getDia());
@@ -828,10 +828,11 @@ class CustomCellRenderer extends DefaultTableCellRenderer {
         Component cr = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         if (column > 0) {
             if (value != null) {
-                String name = (String) value;
-                Color color = new Color(name.split(":")[1].hashCode());
+                Block b = (Block) value;                
+                Color color = b.getColors()[0];
                 setBackground(color);
-                setForeground(new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue()));
+                setForeground(b.getColors()[1]);
+                
             } else {
                 setBackground(colorAlternator(row));
                 setForeground(Color.BLACK);

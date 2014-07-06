@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 /**
@@ -15,6 +16,18 @@ public class Group {
     private int cuposTotales;
     private String text;
     
+    public void setColors(Color[] colors){
+        for(Block b: horario){
+            b.setColors(colors);
+        }    
+    }
+    
+    public void setAsignatura(Asignatura a){
+        for(Block b: horario){
+            b.setAsignatura(a.getNombre());
+        }
+    
+    }
     
     public String getAsText() {
         return text;

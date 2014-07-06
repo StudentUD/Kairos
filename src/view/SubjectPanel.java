@@ -37,7 +37,7 @@ public class SubjectPanel extends javax.swing.JPanel {
                             bot.getMateria().setSelected(null);
                         }
                         frame.selectButton(bot);
-                        frame.addBloq(bot);
+                        frame.paintBloq(bot);
                     }
                 });
             }            

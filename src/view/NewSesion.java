@@ -671,9 +671,9 @@ public class NewSesion extends javax.swing.JFrame {
                 cred += a.getCreditos();
             }
         }
-        String m = Kairos.returnFunnyMSG(cred);
+        FnyMSG m = FnyMSG.getFunnyMessage(cred);
         if (m != null) {
-            JOptionPane.showMessageDialog(this, m, "Atención", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, m.getText(), "Atención",JOptionPane.INFORMATION_MESSAGE,m.getImage());
         }
     }
 
