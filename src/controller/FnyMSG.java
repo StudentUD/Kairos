@@ -6,6 +6,10 @@ import java.util.Random;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
 
+/**
+ *
+ * @author Cesar A. Villamizar C.
+ */
 public class FnyMSG {
     private ImageIcon image;
     private String text;

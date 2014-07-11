@@ -1,6 +1,5 @@
 package controller;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +14,10 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ *
+ * @author Cesar A. Villamizar C.
+ */
 public class SIAConnection {
 
     public static final String[] AMZ = {"http://unsia.unal.edu.co/buscador/service/action.pub", "http://unsia.unal.edu.co/buscador/JSON-RPC"};
@@ -176,8 +179,7 @@ public class SIAConnection {
     }
 
     public Asignatura asignaturaCompleta(Asignatura asig) throws MalformedURLException, IOException, InterruptedException {
-        Color[] asigColor=Asignatura.getNextColorPair();
-        
+                
         JSONArray groupArray = null;
         int count =1;
         while (groupArray == null || groupArray.length() < 1) {
@@ -274,7 +276,7 @@ public class SIAConnection {
             try {
                 Group grup = Kairos.parseGroup(str.toString());
                 grup.setAsignatura(asig);
-                grup.setColors(asigColor);
+                grup.setColors(Asignatura.getNextColorPair());
                 grupos.add(grup);
                 
             } catch (Exception ex) {

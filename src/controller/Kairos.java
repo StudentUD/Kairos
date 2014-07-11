@@ -6,7 +6,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,7 +39,7 @@ public class Kairos {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy_HH-mm");
     private static File dataFile = new File("none");
     private static boolean savedSesion = false;
-    public static final String VERSION = "1.1";
+    public static final String VERSION = "1.2";
     private static LinkedHashSet<Asignatura> subjects = new LinkedHashSet<>();
     private static final String[] sedes={"AMAZONIA","BOGOTA","CARIBE","MANIZALES","MEDELLIN","ORINOQUIA","PALMIRA"};
     private static int selectedSede=1;

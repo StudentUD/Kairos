@@ -6,17 +6,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Box;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -597,16 +590,21 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             protected String doInBackground() {
                 dateLabel.setText("ACTUALIZANDO GRUPOS, ESPERE...");
+                dateLabel.setForeground(Color.red);
                 SIAConnection sia;
                 try {
                     sia = new SIAConnection();
                     for (Asignatura asig : Kairos.getSubjects()) {
-                        String selectedGroup=asig.getSelected().getGrupo().getNumero();                        
+                        Button g = asig.getSelected();
                         sia.asignaturaCompleta(asig);
-                        for(Button bot: asig.getButtons()){
-                            if(bot.getGrupo().getNumero().equals(selectedGroup)){
-                                asig.setSelected(bot);
-                                break;
+
+                        if (g != null) {
+                            String selectedGroup = g.getGrupo().getNumero();
+                            for (Button bot : asig.getButtons()) {
+                                if (bot.getGrupo().getNumero().equals(selectedGroup)) {
+                                    asig.setSelected(bot);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -615,11 +613,13 @@ public class MainFrame extends javax.swing.JFrame {
                     clearTable();
                     deactivateViewFeatures();
                     init();
-                } catch (Exception ex) {
+                } catch (Exception ex) {                    
                     NewSesion.showConnectionProblemDialog(new javax.swing.JFrame());
                 } finally {
+                    dateLabel.setForeground(null);
                     if (Kairos.getSessionDate() != null) {
                         dateLabel.setText(sdf.format(Kairos.getSessionDate()));
+                        
                     } else {
                         dateLabel.setText("--/--/--  --:--");
                     }
@@ -828,11 +828,11 @@ class CustomCellRenderer extends DefaultTableCellRenderer {
         Component cr = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         if (column > 0) {
             if (value != null) {
-                Block b = (Block) value;                
+                Block b = (Block) value;
                 Color color = b.getColors()[0];
                 setBackground(color);
                 setForeground(b.getColors()[1]);
-                
+
             } else {
                 setBackground(colorAlternator(row));
                 setForeground(Color.BLACK);
