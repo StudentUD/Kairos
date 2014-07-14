@@ -71,9 +71,5 @@ public class FnyMSG {
         }        
         return level<0?null:messages.get(level).get(rand.nextInt(messages.get(level).size()));
     }
-
-    public static void main(String[] args){
-        initMessages("/view/MSG/messages.txt");
-    }
-    
+        
 }

@@ -211,7 +211,7 @@
                       <Component id="saveToExcelButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="exitButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="330" max="32767" attributes="0"/>
+                      <EmptySpace pref="322" max="32767" attributes="0"/>
                       <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -240,7 +240,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/view/icon/open alt.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Abrir"/>
+                <Property name="text" type="java.lang.String" value="Abrir sesi&#xf3;n"/>
                 <Property name="toolTipText" type="java.lang.String" value="Abre una sesi&#xf3;n anterior"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
@@ -254,7 +254,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/view/icon/Save.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Guardar"/>
+                <Property name="text" type="java.lang.String" value="Guardar sesi&#xf3;n"/>
                 <Property name="toolTipText" type="java.lang.String" value="Guarda tu sesi&#xf3;n"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
@@ -322,7 +322,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/view/icon/excelSaving.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Guardar horario"/>
+                <Property name="text" type="java.lang.String" value="Exportar horario"/>
                 <Property name="toolTipText" type="java.lang.String" value="Guarda tu horario en Excel"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
@@ -353,8 +353,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="refreshButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="AddSubjectButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="deleteSubjectButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="276" max="32767" attributes="0"/>
+                      <EmptySpace pref="131" max="32767" attributes="0"/>
                       <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -371,6 +373,7 @@
                           </Group>
                           <Component id="refreshButton" alignment="0" max="32767" attributes="0"/>
                           <Component id="deleteSubjectButton" alignment="0" max="32767" attributes="0"/>
+                          <Component id="AddSubjectButton" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -455,6 +458,19 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteSubjectButtonActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="AddSubjectButton">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/view/icon/plus.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Agregar asignatura"/>
+                <Property name="horizontalTextPosition" type="int" value="0"/>
+                <Property name="verticalTextPosition" type="int" value="3"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddSubjectButtonActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

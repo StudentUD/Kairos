@@ -12,6 +12,7 @@ import javax.swing.JLabel;
  */
 public class Asignatura {
 
+    private Color[] c={Color.BLUE,Color.WHITE};
     private int creditos;
     private String codigo;
     private ArrayList<Button> buttons;
@@ -44,16 +45,26 @@ public class Asignatura {
     };
     private static int currentColor= new Random().nextInt(colors.length);
     
-    public static Color[] getNextColorPair(){        
+    private static Color[] getNextColorPair(){        
         int i=(++currentColor)%(colors.length);        
         return colors[i];
     }    
+
+    public Color[] getColor() {
+        c= getNextColorPair();
+        return c;
+    }
     
     public void setSelected(Button selected) {
         this.selected = selected;
-        if(selected!=null){
-        this.label.setForeground(Color.BLUE);}
-        else{this.label.setForeground(null);}
+        if(selected!=null){            
+            this.label.setBackground(c[0]);
+            this.label.setForeground(c[1]);
+        }
+        else{
+            this.label.setBackground(null);
+            this.label.setForeground(null);        
+        }
     }
 
     public Button getSelected() {
@@ -105,6 +116,7 @@ public class Asignatura {
         this.grupos = new ArrayList<>();
         this.buttons = new ArrayList<>();
         this.label= new JLabel("  -->" + name);
+        this.label.setOpaque(true);
         this.codigo= code;
         this.selected=null;
         this.plan=Plan.NULL_PLAN;

@@ -168,7 +168,7 @@ public class Kairos {
         for (String dat : datos) {
             if (!(dat.length() < 2)) {
                 if (dat.charAt(0) == '*') {
-                    asigColor=Asignatura.getNextColorPair();
+                    
                     String[] asig = dat.substring(1).split("-");
                     if (asig.length > 1) {
                         materia = new Asignatura(asig[0], asig[1]);
@@ -179,6 +179,8 @@ public class Kairos {
                     if (asig.length==5){
                         materia.setPlan(new Plan(asig[3],"",asig[4]));
                     }
+                    
+                    asigColor=materia.getColor();
                     subjects.add(materia);
                 } else {
                     Group grupo;

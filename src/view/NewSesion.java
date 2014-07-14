@@ -31,9 +31,7 @@ public class NewSesion extends javax.swing.JFrame {
         if (Kairos.getSubjects() != null && !Kairos.getSubjects().isEmpty());
         {
             for (Asignatura asig : Kairos.getSubjects()) {
-                Asignatura a = new Asignatura(asig.getNombre(), asig.getCodigo());
-                a.setCreditos(asig.getCreditos());
-                asignaturasToAdd.add(a);
+                asignaturasToAdd.add(asig);
             }
             refreshToAddList();
         }

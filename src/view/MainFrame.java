@@ -60,6 +60,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         refreshButton = new javax.swing.JButton();
         deleteSubjectButton = new javax.swing.JButton();
+        AddSubjectButton = new javax.swing.JButton();
         view = new javax.swing.JPanel();
         deactivateButton = new javax.swing.JToggleButton();
         colorByPlacesButton = new javax.swing.JToggleButton();
@@ -156,7 +157,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         openSesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/open alt.png"))); // NOI18N
-        openSesButton.setText("Abrir");
+        openSesButton.setText("Abrir sesión");
         openSesButton.setToolTipText("Abre una sesión anterior");
         openSesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         openSesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -167,7 +168,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         saveSesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/Save.png"))); // NOI18N
-        saveSesButton.setText("Guardar");
+        saveSesButton.setText("Guardar sesión");
         saveSesButton.setToolTipText("Guarda tu sesión");
         saveSesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         saveSesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -214,7 +215,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         saveToExcelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/excelSaving.png"))); // NOI18N
-        saveToExcelButton.setText("Guardar horario");
+        saveToExcelButton.setText("Exportar horario");
         saveToExcelButton.setToolTipText("Guarda tu horario en Excel");
         saveToExcelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         saveToExcelButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -239,7 +240,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(saveToExcelButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(exitButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 330, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         fileLayout.setVerticalGroup(
@@ -313,6 +314,16 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        AddSubjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/icon/plus.png"))); // NOI18N
+        AddSubjectButton.setText("Agregar asignatura");
+        AddSubjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        AddSubjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        AddSubjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddSubjectButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout editLayout = new javax.swing.GroupLayout(edit);
         edit.setLayout(editLayout);
         editLayout.setHorizontalGroup(
@@ -325,8 +336,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(refreshButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(AddSubjectButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteSubjectButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 276, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         editLayout.setVerticalGroup(
@@ -339,7 +352,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(deleteSubjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(deleteSubjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(AddSubjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -516,6 +530,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void newSesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSesButtonActionPerformed
         if (Kairos.showConfirmDialog()) {
+            Kairos.getSubjects().clear();
             this.dispose();
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
@@ -594,19 +609,8 @@ public class MainFrame extends javax.swing.JFrame {
                 SIAConnection sia;
                 try {
                     sia = new SIAConnection();
-                    for (Asignatura asig : Kairos.getSubjects()) {
-                        Button g = asig.getSelected();
+                    for (Asignatura asig : Kairos.getSubjects()) {                        
                         sia.asignaturaCompleta(asig);
-
-                        if (g != null) {
-                            String selectedGroup = g.getGrupo().getNumero();
-                            for (Button bot : asig.getButtons()) {
-                                if (bot.getGrupo().getNumero().equals(selectedGroup)) {
-                                    asig.setSelected(bot);
-                                    break;
-                                }
-                            }
-                        }
                     }
                     Kairos.setSesionDate(new java.util.GregorianCalendar().getTime());
                     Kairos.setSavedSesion(false);
@@ -637,6 +641,15 @@ public class MainFrame extends javax.swing.JFrame {
     private void deleteSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSubjectButtonActionPerformed
         new DeleteSubject(this, true, subjectPanels).setVisible(true);
     }//GEN-LAST:event_deleteSubjectButtonActionPerformed
+
+    private void AddSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddSubjectButtonActionPerformed
+         this.dispose();
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new NewSesion().setVisible(true);
+                }
+            });
+    }//GEN-LAST:event_AddSubjectButtonActionPerformed
 
     public void init() {
         if (Kairos.getSessionDate() != null) {
@@ -781,6 +794,7 @@ public class MainFrame extends javax.swing.JFrame {
     private boolean filterByPlaces = false;
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy  HH:mm");
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AddSubjectButton;
     private javax.swing.JButton aboutButton;
     private javax.swing.JPanel buttonsPane;
     private javax.swing.JButton cleanButton;

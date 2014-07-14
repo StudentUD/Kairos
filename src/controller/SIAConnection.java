@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -179,7 +180,11 @@ public class SIAConnection {
     }
 
     public Asignatura asignaturaCompleta(Asignatura asig) throws MalformedURLException, IOException, InterruptedException {
-                
+          
+        Color[] aColor= asig.getColor();
+        
+        Button g = asig.getSelected();                        
+        
         JSONArray groupArray = null;
         int count =1;
         while (groupArray == null || groupArray.length() < 1) {
@@ -276,7 +281,7 @@ public class SIAConnection {
             try {
                 Group grup = Kairos.parseGroup(str.toString());
                 grup.setAsignatura(asig);
-                grup.setColors(Asignatura.getNextColorPair());
+                grup.setColors(aColor);
                 grupos.add(grup);
                 
             } catch (Exception ex) {
@@ -287,8 +292,12 @@ public class SIAConnection {
         asig.getButtons().clear();
         asig.setGrupos(grupos);
         for(Group grup: grupos){
-            new Button(grup, asig);
-        }        
+            Button bot =new Button(grup, asig);
+            
+            if (g != null&&grup.getNumero().equals(g.getGrupo().getNumero())) {
+                asig.setSelected(bot);
+            }
+        }                   
         return asig;
     }
 
