@@ -33,9 +33,9 @@ public class SIAConnection {
     private static List<Plan> planesPos;
 
     public SIAConnection() throws IOException {        
-        planesPre = retrievePlans(true);;
-        planesPos = retrievePlans(false);;
         initBuscadorAddress();
+        planesPre = retrievePlans(true);
+        planesPos = retrievePlans(false);        
     }
 
     private static String retrieveHtml(String urlString) throws IOException {
@@ -99,7 +99,7 @@ public class SIAConnection {
             }
 
             Plan plan = new Plan(matcher.group(1), matcher.group(3), undergraduate ? "PRE" : "POS");
-            result.add(plan);
+            result.add(plan);            
         }
         return result;
     }

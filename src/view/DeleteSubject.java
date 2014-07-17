@@ -38,7 +38,7 @@ public class DeleteSubject extends javax.swing.JDialog {
         doneButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Eliminar asignatuars");
+        setTitle("Eliminar asignaturas");
         setResizable(false);
 
         jLabel1.setText("Seleccione la(s) asignatura(s) a eliminar:");
