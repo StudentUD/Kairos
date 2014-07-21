@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.Box;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -603,25 +602,27 @@ public class MainFrame extends javax.swing.JFrame {
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         dateLabel.setText("ACTUALIZANDO GRUPOS, ESPERE...");
         dateLabel.setForeground(Color.red);
-        
+
         class MyWorker extends SwingWorker {
 
             @Override
             protected String doInBackground() {
                 SIAConnection sia;
-                try {
-                    sia = new SIAConnection();
-                    for (Asignatura asig : Kairos.getSubjects()) {                        
-                        sia.asignaturaCompleta(asig);
+                int retry = 1;
+                while (retry == 1) {
+                    try {
+                        sia = new SIAConnection();
+                        for (Asignatura asig : Kairos.getSubjects()) {
+                            sia.asignaturaCompleta(asig);
+                        }
+                        Kairos.setSesionDate(new java.util.GregorianCalendar().getTime());
+                        Kairos.setSavedSesion(false);
+                        retry = 0;
+
+                    } catch (Exception ex) {
+                        retry = NewSesion.showConnectionProblemDialog(new javax.swing.JFrame());
                     }
-                    Kairos.setSesionDate(new java.util.GregorianCalendar().getTime());
-                    Kairos.setSavedSesion(false);
-                    
-                } catch (Exception ex) {                    
-                    NewSesion.showConnectionProblemDialog(new javax.swing.JFrame());
                 }
-                
-                
                 return "Done";
             }
 
@@ -630,11 +631,11 @@ public class MainFrame extends javax.swing.JFrame {
                 clearTable();
                 deactivateViewFeatures();
                 init();
-                
-            	dateLabel.setForeground(null);
+
+                dateLabel.setForeground(null);
                 if (Kairos.getSessionDate() != null) {
                     dateLabel.setText(sdf.format(Kairos.getSessionDate()));
-                    
+
                 } else {
                     dateLabel.setText("--/--/--  --:--");
                 }
@@ -648,12 +649,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteSubjectButtonActionPerformed
 
     private void AddSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddSubjectButtonActionPerformed
-         this.dispose();
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    new NewSesion().setVisible(true);
-                }
-            });
+        this.dispose();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new NewSesion().setVisible(true);
+            }
+        });
     }//GEN-LAST:event_AddSubjectButtonActionPerformed
 
     public void init() {

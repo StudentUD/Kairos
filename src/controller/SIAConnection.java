@@ -21,14 +21,14 @@ import org.json.JSONObject;
  */
 public class SIAConnection {
 
-    public static final String[] AMZ = {"http://unsia.unal.edu.co/buscador/service/action.pub", "http://unsia.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] BOG = {"http://www.sia.unal.edu.co/buscador/service/action.pub", "http://sia.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] CAR = {"http://siafrontera.sia.unal.edu.co/buscador/service/action.pub", "http://siafrontera.sia.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] MAN = {"http://sia.manizales.unal.edu.co/buscador/service/action.pub", "http://sia.manizales.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] MED = {"http://sia1.medellin.unal.edu.co:9401/buscador/service/action.pub", "http://sia1.medellin.unal.edu.co:9401/buscador/JSON-RPC"};
-    public static final String[] ORI = {"http://orinoquia.sia.unal.edu.co/buscador/service/action.pub", "http://orinoquia.sia.unal.edu.co/buscador/JSON-RPC"};
-    public static final String[] PLM = {"http://www.sia.palmira.unal.edu.co/buscador/service/action.pub", "http://www.sia.palmira.unal.edu.co/buscador/JSON-RPC"};
-    private static String SIA_URL[] = BOG;
+    private static final SIAWeb AMZ = new SIAWeb("unsia.unal.edu.co/buscador/service/action.pub", "unsia.unal.edu.co/buscador/JSON-RPC");
+    private static final SIAWeb BOG =  new SIAWeb("sia.unal.edu.co/buscador/service/action.pub", "sia.unal.edu.co/buscador/JSON-RPC","http://www5.","http://www3.","http://www.");
+    private static final SIAWeb CAR =  new SIAWeb("siafrontera.sia.unal.edu.co/buscador/service/action.pub", "siafrontera.sia.unal.edu.co/buscador/JSON-RPC");
+    private static final SIAWeb MAN =  new SIAWeb("sia.manizales.unal.edu.co/buscador/service/action.pub", "sia.manizales.unal.edu.co/buscador/JSON-RPC");
+    private static final SIAWeb MED =  new SIAWeb("medellin.unal.edu.co:9401/buscador/service/action.pub", "medellin.unal.edu.co:9401/buscador/JSON-RPC","http://sia1.","http://sia2.");
+    private static final SIAWeb ORI =  new SIAWeb("orinoquia.sia.unal.edu.co/buscador/service/action.pub", "orinoquia.sia.unal.edu.co/buscador/JSON-RPC");
+    private static final SIAWeb PLM =  new SIAWeb("www.sia.palmira.unal.edu.co/buscador/service/action.pub", "www.sia.palmira.unal.edu.co/buscador/JSON-RPC");
+    private static SIAWeb urlGenerator = BOG;
     private static List<Plan> planesPre;
     private static List<Plan> planesPos;
 
@@ -58,7 +58,15 @@ public class SIAConnection {
     }
 
     private static List<Plan> retrievePlans(boolean undergraduate) throws IOException {
-        String html = retrieveHtml(SIA_URL[0]);
+        String url=urlGenerator.getNextSIAAlternative();
+        String html;
+        try{
+            html = retrieveHtml(url);
+            urlGenerator.reportSuccess(true);
+        }catch(IOException ex){
+            urlGenerator.reportSuccess(false);
+            throw ex;
+        }      
 
         // Regular expressions should not be used to parse HTML, but we're 
         // badass
@@ -121,35 +129,35 @@ public class SIAConnection {
     private void initBuscadorAddress() {
         switch (Kairos.getSede()) {
             case 0: {
-                SIA_URL = AMZ;
+                urlGenerator = AMZ;
                 break;
             }
             case 1: {
-                SIA_URL = BOG;
+                urlGenerator = BOG;
                 break;
             }
             case 2: {
-                SIA_URL = CAR;
+                urlGenerator = CAR;
                 break;
             }
             case 3: {
-                SIA_URL = MAN;
+                urlGenerator = MAN;
                 break;
             }
             case 4: {
-                SIA_URL = MED;
+                urlGenerator = MED;
                 break;
             }
             case 5: {
-                SIA_URL = ORI;
+                urlGenerator = ORI;
                 break;
             }
             case 6: {
-                SIA_URL = PLM;
+                urlGenerator = PLM;
                 break;
             }
             default: {
-                SIA_URL = BOG;
+                urlGenerator = BOG;
             }
         }
     }
@@ -303,9 +311,18 @@ public class SIAConnection {
 
     private static JSONObject performSIARequest(JSONObject requestContent)
             throws MalformedURLException, IOException {        
-        URL siaUrl = new URL(SIA_URL[1]);
-        HttpURLConnection connection =
-                (HttpURLConnection) siaUrl.openConnection();
+        String url=urlGenerator.getNextJSONAlternative();
+        
+        URL siaUrl = new URL(url);
+        HttpURLConnection connection;
+        
+        try{
+            connection =(HttpURLConnection) siaUrl.openConnection();
+            urlGenerator.reportSuccess(true);            
+        }catch(IOException ex){
+            urlGenerator.reportSuccess(false);
+            throw ex;
+        }
         
         connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
         connection.setDoOutput(true);
@@ -338,4 +355,42 @@ public class SIAConnection {
         res = res.replaceAll("Ú", "U");
         return res;
     }
+}
+
+
+class SIAWeb{
+
+    private final String SIA_URL;
+    private final String JSON_URL;
+    private final String[] prefixAlternatives;
+    private int nextAlternative=0;
+    private boolean success=false;
+    
+    protected void reportSuccess(boolean s){
+        this.success=s;
+    }
+    
+    protected SIAWeb(String SIA_URL, String JSON_URL, String... prefixAlternatives) {
+        this.SIA_URL = SIA_URL;
+        this.JSON_URL = JSON_URL;
+        this.prefixAlternatives = prefixAlternatives;
+    }   
+    
+    protected SIAWeb(String SIA_URL, String JSON_URL) {
+        this(SIA_URL,JSON_URL,"http://");
+    }   
+    
+    protected String getNextSIAAlternative(){
+        if(!success){
+            nextAlternative++;
+        }
+        return prefixAlternatives[(nextAlternative)%prefixAlternatives.length]+SIA_URL;
+    }
+    
+    protected String getNextJSONAlternative(){
+        if(!success){
+            nextAlternative++;
+        }
+        return prefixAlternatives[(nextAlternative++)%prefixAlternatives.length]+JSON_URL;
+    }    
 }

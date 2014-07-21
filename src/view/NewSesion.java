@@ -18,17 +18,20 @@ public class NewSesion extends javax.swing.JFrame {
      * Creates new form NewSesion
      */
     public NewSesion() {
-        try {
-            buscador = new SIAConnection();            
-        } catch (Exception ex) {
-            showConnectionProblemDialog(new javax.swing.JFrame());
+        int retry = 1;
+        while (retry == 1) {
+            try {
+                buscador = new SIAConnection();
+                retry = 0;
+            } catch (IOException ex) {
+                retry = showConnectionProblemDialog(new javax.swing.JFrame());
+            }
         }
-        
         asignaturas = new ArrayList<>();
         asignaturasToAdd = new ArrayList<>();
 
         initComponents();
-        if (Kairos.getSubjects() != null && !Kairos.getSubjects().isEmpty());
+        if (Kairos.getSubjects() != null && !Kairos.getSubjects().isEmpty())
         {
             for (Asignatura asig : Kairos.getSubjects()) {
                 asignaturasToAdd.add(asig);
@@ -484,7 +487,7 @@ public class NewSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        final String searchParameter = searchTextField.getText().replaceAll("-", "").replaceAll("%", "");             
+        final String searchParameter = searchTextField.getText().replaceAll("-", "").replaceAll("%", "");
         if (searchParameter.length() >= 3) {
             class MyWorker extends SwingWorker {
 
@@ -493,17 +496,20 @@ public class NewSesion extends javax.swing.JFrame {
                     jProgressBar1.setVisible(true);
                     jLabel6.setText("Buscando...");
                     allButtonsSetEnable(false);
-                    try {
-                        Plan plan= Plan.NULL_PLAN;
-                        if(planComboBox.getSelectedIndex()!=0){
-                            plan= (Plan)planComboBox.getSelectedItem();
-                        }                        
-                        asignaturas = buscador.buscarAsignaturas(searchParameter,plan);
-                    } catch (IOException ex) {
-                        showConnectionProblemDialog(new javax.swing.JFrame());
-                    } finally {
-                        return "Done.";
+                    int retry = 1;
+                    while (retry == 1) {
+                        try {
+                            Plan plan = Plan.NULL_PLAN;
+                            if (planComboBox.getSelectedIndex() != 0) {
+                                plan = (Plan) planComboBox.getSelectedItem();
+                            }
+                            asignaturas = buscador.buscarAsignaturas(searchParameter, plan);
+                            retry = 0;
+                        } catch (IOException ex) {
+                            retry = showConnectionProblemDialog(new javax.swing.JFrame());
+                        }
                     }
+                    return "Done.";
                 }
 
                 @Override
@@ -540,28 +546,31 @@ public class NewSesion extends javax.swing.JFrame {
                 protected String doInBackground() {
                     jProgressBar1.setVisible(true);
                     allButtonsSetEnable(false);
-                    try {
-                        for (Asignatura asig : asignaturasToAdd) {
-                            jLabel6.setText("Cargando \"" + asig.getNombre() + "\"...");
-                            //buscador.setPlanFilter(asig.getPlan());
-                            Kairos.getSubjects().add(buscador.asignaturaCompleta(asig));
+                    int retry = 1;
+                    while (retry == 1) {
+
+                        try {
+                            for (Asignatura asig : asignaturasToAdd) {
+                                jLabel6.setText("Cargando \"" + asig.getNombre() + "\"...");
+                                Kairos.getSubjects().add(buscador.asignaturaCompleta(asig));
+                            }
+                            Kairos.setSesionDate(new GregorianCalendar().getTime());
+                            Kairos.setSavedSesion(false);
+                            invokeMainFrame();
+                            retry = 0;
+                        } catch (Exception ex) {
+                            retry = showConnectionProblemDialog(new javax.swing.JFrame());
+                            Kairos.getSubjects().clear();                        
                         }
-                        Kairos.setSesionDate(new GregorianCalendar().getTime());
-                        Kairos.setSavedSesion(false);
-                        invokeMainFrame();
-                    } catch (IOException ex) {
-                        showConnectionProblemDialog(new javax.swing.JFrame());
-                        allButtonsSetEnable(true);
-                        jProgressBar1.setVisible(false);
-                        jLabel6.setText("");
-                        Kairos.getSubjects().clear();
-                    } finally {
-                        return "Done.";
                     }
+                    return "Done.";
                 }
 
                 @Override
                 protected void done() {
+                    allButtonsSetEnable(true);
+                    jProgressBar1.setVisible(false);
+                    jLabel6.setText("");
                 }
             }
             new MyWorker().execute();
@@ -614,7 +623,7 @@ public class NewSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_preButtonActionPerformed
 
     private void planComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_planComboBoxActionPerformed
-        
+
     }//GEN-LAST:event_planComboBoxActionPerformed
 
     private void posButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_posButtonActionPerformed
@@ -626,19 +635,27 @@ public class NewSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_posButtonActionPerformed
 
     private void refreshPlansList() {
-        try {
-            if (preButton.isSelected()) {
-                planComboBox.setModel(new javax.swing.DefaultComboBoxModel(buscador.getPlansPreg().toArray()));
-            } else if (posButton.isSelected()) {
-                planComboBox.setModel(new javax.swing.DefaultComboBoxModel(buscador.getPlansPos().toArray()));
-            } else {
-                String[] s = {"--Seleccione un nivel académico--"};
-                planComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(s));                
+        int retry = 1;
+        while (retry == 1) {
+            try {
+                if (preButton.isSelected()) {
+                    planComboBox.setModel(new javax.swing.DefaultComboBoxModel(buscador.getPlansPreg().toArray()));
+                } else if (posButton.isSelected()) {
+                    planComboBox.setModel(new javax.swing.DefaultComboBoxModel(buscador.getPlansPos().toArray()));
+                } else {
+                    String[] s = {"--Seleccione un nivel académico--"};
+                    planComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(s));
+                }
+                retry = 0;
+            } catch (Exception ex) {
+                retry = showConnectionProblemDialog(this);
+                if (retry == 0 && preButton.isSelected()) {
+                    preButton.setSelected(false);
+                }
+                if (retry == 0 && posButton.isSelected()) {
+                    posButton.setSelected(false);
+                }
             }
-        } catch (Exception ex) {
-            showConnectionProblemDialog(this);
-            if(preButton.isSelected())preButton.setSelected(false);
-            if(posButton.isSelected())posButton.setSelected(false);
         }
     }
 
@@ -656,7 +673,7 @@ public class NewSesion extends javax.swing.JFrame {
         }
         if (preButton.isSelected() || posButton.isSelected()) {
             toAdd.setPlan((Plan) planComboBox.getSelectedItem());
-        }else{
+        } else {
             toAdd.setPlan(Plan.NULL_PLAN);
         }
         asignaturasToAdd.add(toAdd);
@@ -671,7 +688,7 @@ public class NewSesion extends javax.swing.JFrame {
         }
         FnyMSG m = FnyMSG.getFunnyMessage(cred);
         if (m != null) {
-            JOptionPane.showMessageDialog(this, m.getText(), "Atención",JOptionPane.INFORMATION_MESSAGE,m.getImage());
+            JOptionPane.showMessageDialog(this, m.getText(), "Atención", JOptionPane.INFORMATION_MESSAGE, m.getImage());
         }
     }
 
@@ -681,7 +698,7 @@ public class NewSesion extends javax.swing.JFrame {
         removeButton.setEnabled(b);
         removeAllButton.setEnabled(b);
         searchButton.setEnabled(b);
-        loadButton.setEnabled(b);        
+        loadButton.setEnabled(b);
     }
 
     private void showCredits() {
@@ -697,7 +714,7 @@ public class NewSesion extends javax.swing.JFrame {
         creditsLabel1.setIcon(getNumberIcon(creditsDec));
     }
 
-    private void invokeMainFrame() {        
+    private void invokeMainFrame() {
         this.dispose();
         java.awt.EventQueue.invokeLater(new Runnable() {
 
@@ -737,11 +754,12 @@ public class NewSesion extends javax.swing.JFrame {
         }
         return icn;
     }
-    
-    public static void showConnectionProblemDialog(javax.swing.JFrame frame){
-        JOptionPane.showMessageDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.WARNING_MESSAGE);
+
+    public static int showConnectionProblemDialog(javax.swing.JFrame frame) {// 1= TRY AGAIN 0= CONTINUE
+        Object[] options = {"Continuar", "Intentar nuevamente"};
+        return JOptionPane.showOptionDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
     }
-    
+
     private SIAConnection buscador;
     private ArrayList<Asignatura> asignaturas;
     private ArrayList<Asignatura> asignaturasToAdd;

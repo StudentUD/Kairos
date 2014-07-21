@@ -97,6 +97,7 @@ public class Asignatura {
     
     public void setPlan(Plan p){
         this.plan=p;
+        this.label.setText("  -->" + name+" (Plan:"+this.plan.getCode()+")");
     }
 
     public void setCreditos(int creditos) {
@@ -137,6 +138,7 @@ public class Asignatura {
         return false;
     }
 
+    @Override
     public int hashCode() {
         int hash = 5;        
         hash = 79 * hash + Objects.hashCode(this.name);
@@ -145,7 +147,7 @@ public class Asignatura {
     
     @Override
     public String toString() {
-        return this.creditos+":"+this.name;
+        return this.creditos+":"+this.name+" (Plan:"+this.plan.getCode()+")";
     }    
 }
    
