@@ -601,19 +601,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutButtonActionPerformed
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        dateLabel.setText("ACTUALIZANDO GRUPOS, ESPERE...");
+	dateLabel.setForeground(Color.red);
+        
         class MyWorker extends SwingWorker {
 
             @Override
             protected String doInBackground() {
-            	SwingUtilities.invokeLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						dateLabel.setText("ACTUALIZANDO GRUPOS, ESPERE...");
-		                dateLabel.setForeground(Color.red);
-					}
-				});
-                
                 SIAConnection sia;
                 try {
                     sia = new SIAConnection();
