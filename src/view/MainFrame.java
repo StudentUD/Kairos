@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.Box;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -604,8 +605,15 @@ public class MainFrame extends javax.swing.JFrame {
 
             @Override
             protected String doInBackground() {
-                dateLabel.setText("ACTUALIZANDO GRUPOS, ESPERE...");
-                dateLabel.setForeground(Color.red);
+            	SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						dateLabel.setText("ACTUALIZANDO GRUPOS, ESPERE...");
+		                dateLabel.setForeground(Color.red);
+					}
+				});
+                
                 SIAConnection sia;
                 try {
                     sia = new SIAConnection();
@@ -614,25 +622,28 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                     Kairos.setSesionDate(new java.util.GregorianCalendar().getTime());
                     Kairos.setSavedSesion(false);
-                    clearTable();
-                    deactivateViewFeatures();
-                    init();
+                    
                 } catch (Exception ex) {                    
                     NewSesion.showConnectionProblemDialog(new javax.swing.JFrame());
-                } finally {
-                    dateLabel.setForeground(null);
-                    if (Kairos.getSessionDate() != null) {
-                        dateLabel.setText(sdf.format(Kairos.getSessionDate()));
-                        
-                    } else {
-                        dateLabel.setText("--/--/--  --:--");
-                    }
-                    return "Done";
                 }
+                
+                
+                return "Done";
             }
 
             @Override
             protected void done() {
+                clearTable();
+                deactivateViewFeatures();
+                init();
+                
+            	dateLabel.setForeground(null);
+                if (Kairos.getSessionDate() != null) {
+                    dateLabel.setText(sdf.format(Kairos.getSessionDate()));
+                    
+                } else {
+                    dateLabel.setText("--/--/--  --:--");
+                }
             }
         }
         new MyWorker().execute();
