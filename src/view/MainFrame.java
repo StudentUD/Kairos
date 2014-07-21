@@ -602,7 +602,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         dateLabel.setText("ACTUALIZANDO GRUPOS, ESPERE...");
-	dateLabel.setForeground(Color.red);
+        dateLabel.setForeground(Color.red);
         
         class MyWorker extends SwingWorker {
 
