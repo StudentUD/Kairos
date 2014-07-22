@@ -22,7 +22,7 @@ import org.json.JSONObject;
 public class SIAConnection {
 
     private static final SIAWeb AMZ = new SIAWeb("unsia.unal.edu.co");
-    private static final SIAWeb BOG =  new SIAWeb("sia.unal.edu.co","http://www5.","http://www3.","http://www.");
+    private static final SIAWeb BOG =  new SIAWeb("sia.unal.edu.co","http://www.","http://www3.","http://www2.");
     private static final SIAWeb CAR =  new SIAWeb("siafrontera.sia.unal.edu.co");
     private static final SIAWeb MAN =  new SIAWeb("sia.manizales.unal.edu.co");
     private static final SIAWeb MED =  new SIAWeb("medellin.unal.edu.co:9401","http://sia.","http://sia1.","http://sia2.");
@@ -60,13 +60,9 @@ public class SIAConnection {
     private static List<Plan> retrievePlans(boolean undergraduate) throws IOException {
         String url=urlGenerator.getNextSIAAlternative();
         String html;
-        try{
-            html = retrieveHtml(url);
-            urlGenerator.reportSuccess(true);
-        }catch(IOException ex){
-            urlGenerator.reportSuccess(false);
-            throw ex;
-        }      
+        
+        html = retrieveHtml(url);
+           
 
         // Regular expressions should not be used to parse HTML, but we're 
         // badass
@@ -161,7 +157,17 @@ public class SIAConnection {
             }
         }
     }
+    
+    public static int getAlternativeSize(){
+        return urlGenerator.prefixAlternatives.length;
+    }
 
+    public static void setPreferedAlternative(int p){
+        if(p<urlGenerator.prefixAlternatives.length){
+            urlGenerator.setAlternative(p);        
+        }
+    }
+    
     public ArrayList<Asignatura> buscarAsignaturas(String sub, Plan planFilter) throws MalformedURLException, IOException {
         String subjectMatch = cleanSubjectMatch(sub);
         ArrayList<Asignatura> subjects = new ArrayList<>();
@@ -314,15 +320,9 @@ public class SIAConnection {
         String url=urlGenerator.getNextJSONAlternative();
         
         URL siaUrl = new URL(url);
-        HttpURLConnection connection;
-        
-        try{
-            connection =(HttpURLConnection) siaUrl.openConnection();
-            urlGenerator.reportSuccess(true);            
-        }catch(IOException ex){
-            urlGenerator.reportSuccess(false);
-            throw ex;
-        }
+        HttpURLConnection connection;        
+      
+        connection =(HttpURLConnection) siaUrl.openConnection();
         
         connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
         connection.setDoOutput(true);
@@ -361,14 +361,13 @@ public class SIAConnection {
 class SIAWeb{
 
     private final String SIArootURL;    
-    private final String[] prefixAlternatives;
-    private int nextAlternative=0;
-    private boolean success=false;
+    protected final String[] prefixAlternatives;
+    private int nextAlternative=0;   
     
-    protected void reportSuccess(boolean s){
-        this.success=s;
+    protected void setAlternative(int a){
+        nextAlternative=a;
     }
-    
+        
     protected SIAWeb(String SIArootURL, String... prefixAlternatives) {
         this.SIArootURL = SIArootURL;        
         this.prefixAlternatives = prefixAlternatives;
@@ -378,17 +377,11 @@ class SIAWeb{
         this(SIA_URL,"http://");
     }   
     
-    protected String getNextSIAAlternative(){
-        if(!success){
-            nextAlternative++;
-        }
+    protected String getNextSIAAlternative(){        
         return prefixAlternatives[(nextAlternative)%prefixAlternatives.length]+SIArootURL+"/buscador/service/action.pub";
     }
     
-    protected String getNextJSONAlternative(){
-        if(!success){
-            nextAlternative++;
-        }
+    protected String getNextJSONAlternative(){        
         return prefixAlternatives[(nextAlternative++)%prefixAlternatives.length]+SIArootURL+"/buscador/JSON-RPC";
     }    
 }

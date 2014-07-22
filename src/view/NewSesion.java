@@ -19,7 +19,7 @@ public class NewSesion extends javax.swing.JFrame {
      */
     public NewSesion() {
         int retry = 1;
-        while (retry == 1) {
+        while (retry != 0) {
             try {
                 buscador = new SIAConnection();
                 retry = 0;
@@ -497,7 +497,7 @@ public class NewSesion extends javax.swing.JFrame {
                     jLabel6.setText("Buscando...");
                     allButtonsSetEnable(false);
                     int retry = 1;
-                    while (retry == 1) {
+                    while (retry != 0) {
                         try {
                             Plan plan = Plan.NULL_PLAN;
                             if (planComboBox.getSelectedIndex() != 0) {
@@ -547,7 +547,7 @@ public class NewSesion extends javax.swing.JFrame {
                     jProgressBar1.setVisible(true);
                     allButtonsSetEnable(false);
                     int retry = 1;
-                    while (retry == 1) {
+                    while (retry != 0) {
 
                         try {
                             for (Asignatura asig : asignaturasToAdd) {
@@ -636,7 +636,7 @@ public class NewSesion extends javax.swing.JFrame {
 
     private void refreshPlansList() {
         int retry = 1;
-        while (retry == 1) {
+        while (retry != 0) {
             try {
                 if (preButton.isSelected()) {
                     planComboBox.setModel(new javax.swing.DefaultComboBoxModel(buscador.getPlansPreg().toArray()));
@@ -756,8 +756,20 @@ public class NewSesion extends javax.swing.JFrame {
     }
 
     public static int showConnectionProblemDialog(javax.swing.JFrame frame) {// 1= TRY AGAIN 0= CONTINUE
-        Object[] options = {"Continuar", "Intentar nuevamente"};
-        return JOptionPane.showOptionDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+        int size=SIAConnection.getAlternativeSize();
+        Object[] options = new Object[size+1];
+        options[0]="Continuar";
+        
+        if(size>1){
+            for(int i=1;i<=size;i++){
+                options[i]="Intentar opción "+i;
+            }
+        }else{
+            options[1]="Intentar nuevamente";
+        }      
+        int choice=JOptionPane.showOptionDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+        SIAConnection.setPreferedAlternative(choice-1);
+        return choice;
     }
 
     private SIAConnection buscador;
