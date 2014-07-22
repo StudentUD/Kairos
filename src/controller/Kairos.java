@@ -32,7 +32,7 @@ import jxl.write.WritableWorkbook;
  */
 public class Kairos {
 
-    public static final int MAX_CREDITS = 30;
+    public static final int MAX_CREDITS = 40;
     private static final FileNameExtensionFilter filter = new FileNameExtensionFilter("Kairos session file (*.KSF)", "KSF");
     private static final FileNameExtensionFilter filterX = new FileNameExtensionFilter("Libro de excel (*.xls)", "xls");
     private static Date sesionDate = null;

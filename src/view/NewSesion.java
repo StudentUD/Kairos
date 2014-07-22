@@ -31,8 +31,7 @@ public class NewSesion extends javax.swing.JFrame {
         asignaturasToAdd = new ArrayList<>();
 
         initComponents();
-        if (Kairos.getSubjects() != null && !Kairos.getSubjects().isEmpty())
-        {
+        if (Kairos.getSubjects() != null && !Kairos.getSubjects().isEmpty()) {
             for (Asignatura asig : Kairos.getSubjects()) {
                 asignaturasToAdd.add(asig);
             }
@@ -560,7 +559,7 @@ public class NewSesion extends javax.swing.JFrame {
                             retry = 0;
                         } catch (Exception ex) {
                             retry = showConnectionProblemDialog(new javax.swing.JFrame());
-                            Kairos.getSubjects().clear();                        
+                            Kairos.getSubjects().clear();
                         }
                     }
                     return "Done.";
@@ -756,20 +755,22 @@ public class NewSesion extends javax.swing.JFrame {
     }
 
     public static int showConnectionProblemDialog(javax.swing.JFrame frame) {// 1= TRY AGAIN 0= CONTINUE
-        int size=SIAConnection.getAlternativeSize();
-        Object[] options = new Object[size+1];
-        options[0]="Continuar";
-        
-        if(size>1){
-            for(int i=1;i<=size;i++){
-                options[i]="Intentar opción "+i;
+
+        Object[] opt = {"Continuar", "Intentar desde otra dirección"};
+        int retry = JOptionPane.showOptionDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, opt, opt[0]);
+
+        if (retry == 1) {
+            String[] alter = SIAConnection.getAlternatives();
+            Object[] options = new Object[alter.length];
+            
+            for (int i = 0; i < alter.length; i++) {
+                options[i] = alter[i] + SIAConnection.getSIAroot();
             }
-        }else{
-            options[1]="Intentar nuevamente";
-        }      
-        int choice=JOptionPane.showOptionDialog(frame, "No se ha podido establecer conexión con el servidor.\nCargue una sesión manualmente o vuelva a intentarlo más tarde.", "Error de conexión", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-        SIAConnection.setPreferedAlternative(choice-1);
-        return choice;
+            
+            String choice = (String) JOptionPane.showInputDialog(frame, "Seleccione la dirección alternativa a usar.", "Error de conexión", JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+            SIAConnection.setPreferedAlternative(choice);
+        }
+        return retry;
     }
 
     private SIAConnection buscador;

@@ -1,4 +1,4 @@
-3
+﻿3
 *0-10
 ¡ESTUDIANTE usó CARGA-MINIMA!...¡Es muy efectivo!...SEMESTRE se ha debilitado...PAPA ha subido de nivel.;/view/MSG/Poke.png
 *20-25
@@ -6,7 +6,7 @@ Que la fuerza te acompañe.;/view/MSG/yoda_icon.jpg
 Wow. Much credits. So risky.;/view/MSG/Doge.png
 Si subir el PAPA quieres inscribir menos créditos debes.;/view/MSG/yoda_icon.jpg
 ¡Más de 20 créditos!¿Quien te crees que eres? ¿Superman?;/view/MSG/superman-icon.gif
-*25-30
+*25-40
 ¡YOU SHALL NOT PASS!;/view/MSG/gandalf.jpg
 Te encanta vivir al límite, ¿no es así?;/view/MSG/limit.png
 Chuck Norris aprueba la cantidad de créditos inscritos.;/view/MSG/Chuck.jpg

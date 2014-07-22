@@ -158,14 +158,16 @@ public class SIAConnection {
         }
     }
     
-    public static int getAlternativeSize(){
-        return urlGenerator.prefixAlternatives.length;
+    public static String[] getAlternatives(){
+        return urlGenerator.prefixAlternatives;
     }
 
-    public static void setPreferedAlternative(int p){
-        if(p<urlGenerator.prefixAlternatives.length){
-            urlGenerator.setAlternative(p);        
-        }
+    public static String getSIAroot(){
+        return urlGenerator.SIArootURL;
+    }
+    
+    public static void setPreferedAlternative(String p){
+        urlGenerator.setAlternative(p);        
     }
     
     public ArrayList<Asignatura> buscarAsignaturas(String sub, Plan planFilter) throws MalformedURLException, IOException {
@@ -360,17 +362,18 @@ public class SIAConnection {
 
 class SIAWeb{
 
-    private final String SIArootURL;    
+    protected final String SIArootURL;    
     protected final String[] prefixAlternatives;
-    private int nextAlternative=0;   
+    private String prefered;   
     
-    protected void setAlternative(int a){
-        nextAlternative=a;
+    protected void setAlternative(String a){
+        prefered=a;
     }
         
     protected SIAWeb(String SIArootURL, String... prefixAlternatives) {
         this.SIArootURL = SIArootURL;        
         this.prefixAlternatives = prefixAlternatives;
+        this.prefered=prefixAlternatives[0]+SIArootURL;
     }   
     
     protected SIAWeb(String SIA_URL) {
@@ -378,10 +381,10 @@ class SIAWeb{
     }   
     
     protected String getNextSIAAlternative(){        
-        return prefixAlternatives[(nextAlternative)%prefixAlternatives.length]+SIArootURL+"/buscador/service/action.pub";
+        return prefered+"/buscador/service/action.pub";
     }
     
     protected String getNextJSONAlternative(){        
-        return prefixAlternatives[(nextAlternative++)%prefixAlternatives.length]+SIArootURL+"/buscador/JSON-RPC";
+        return prefered+"/buscador/JSON-RPC";
     }    
 }
