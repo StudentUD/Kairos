@@ -21,13 +21,13 @@ import org.json.JSONObject;
  */
 public class SIAConnection {
 
-    private static final SIAWeb AMZ = new SIAWeb("unsia.unal.edu.co/buscador/service/action.pub", "unsia.unal.edu.co/buscador/JSON-RPC");
-    private static final SIAWeb BOG =  new SIAWeb("sia.unal.edu.co/buscador/service/action.pub", "sia.unal.edu.co/buscador/JSON-RPC","http://www5.","http://www3.","http://www.");
-    private static final SIAWeb CAR =  new SIAWeb("siafrontera.sia.unal.edu.co/buscador/service/action.pub", "siafrontera.sia.unal.edu.co/buscador/JSON-RPC");
-    private static final SIAWeb MAN =  new SIAWeb("sia.manizales.unal.edu.co/buscador/service/action.pub", "sia.manizales.unal.edu.co/buscador/JSON-RPC");
-    private static final SIAWeb MED =  new SIAWeb("medellin.unal.edu.co:9401/buscador/service/action.pub", "medellin.unal.edu.co:9401/buscador/JSON-RPC","http://sia1.","http://sia2.");
-    private static final SIAWeb ORI =  new SIAWeb("orinoquia.sia.unal.edu.co/buscador/service/action.pub", "orinoquia.sia.unal.edu.co/buscador/JSON-RPC");
-    private static final SIAWeb PLM =  new SIAWeb("www.sia.palmira.unal.edu.co/buscador/service/action.pub", "www.sia.palmira.unal.edu.co/buscador/JSON-RPC");
+    private static final SIAWeb AMZ = new SIAWeb("unsia.unal.edu.co");
+    private static final SIAWeb BOG =  new SIAWeb("sia.unal.edu.co","http://www5.","http://www3.","http://www.");
+    private static final SIAWeb CAR =  new SIAWeb("siafrontera.sia.unal.edu.co");
+    private static final SIAWeb MAN =  new SIAWeb("sia.manizales.unal.edu.co");
+    private static final SIAWeb MED =  new SIAWeb("medellin.unal.edu.co:9401","http://sia.","http://sia1.","http://sia2.");
+    private static final SIAWeb ORI =  new SIAWeb("orinoquia.sia.unal.edu.co");
+    private static final SIAWeb PLM =  new SIAWeb("www.sia.palmira.unal.edu.co");
     private static SIAWeb urlGenerator = BOG;
     private static List<Plan> planesPre;
     private static List<Plan> planesPos;
@@ -360,8 +360,7 @@ public class SIAConnection {
 
 class SIAWeb{
 
-    private final String SIA_URL;
-    private final String JSON_URL;
+    private final String SIArootURL;    
     private final String[] prefixAlternatives;
     private int nextAlternative=0;
     private boolean success=false;
@@ -370,27 +369,26 @@ class SIAWeb{
         this.success=s;
     }
     
-    protected SIAWeb(String SIA_URL, String JSON_URL, String... prefixAlternatives) {
-        this.SIA_URL = SIA_URL;
-        this.JSON_URL = JSON_URL;
+    protected SIAWeb(String SIArootURL, String... prefixAlternatives) {
+        this.SIArootURL = SIArootURL;        
         this.prefixAlternatives = prefixAlternatives;
     }   
     
-    protected SIAWeb(String SIA_URL, String JSON_URL) {
-        this(SIA_URL,JSON_URL,"http://");
+    protected SIAWeb(String SIA_URL) {
+        this(SIA_URL,"http://");
     }   
     
     protected String getNextSIAAlternative(){
         if(!success){
             nextAlternative++;
         }
-        return prefixAlternatives[(nextAlternative)%prefixAlternatives.length]+SIA_URL;
+        return prefixAlternatives[(nextAlternative)%prefixAlternatives.length]+SIArootURL+"/buscador/service/action.pub";
     }
     
     protected String getNextJSONAlternative(){
         if(!success){
             nextAlternative++;
         }
-        return prefixAlternatives[(nextAlternative++)%prefixAlternatives.length]+JSON_URL;
+        return prefixAlternatives[(nextAlternative++)%prefixAlternatives.length]+SIArootURL+"/buscador/JSON-RPC";
     }    
 }
